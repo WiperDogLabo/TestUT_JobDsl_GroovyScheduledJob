@@ -1,0 +1,328 @@
+***Unit test getJobInstance()
+  input for test function getJobInstance(): 
+  	 * fullPathOfFile: path to job file
+  	 * rootJobName: job name
+  	 * instanceName: instance name
+  	 * vJob: a map ["name":"instance_job_name"]
+  	 * classOfJob: job class
+  	 * paramsInstances: params of instances
+  	 * properties: MonitorJobConfigLoader.getProperties()
+  	 * ResourceConstants.DEF_JOB_NAME = "name"
+
+- Case1: rootJobName and instanceName has defined
+	/**
+	 * Check object instances created from jobname.
+	 * jobfile has define JOB = [name: "test"].
+	 * rootJobName is "test".
+	 * classOfJob has define.
+	 * 
+	 * Expected: 
+	 *		instJobName: is "test_instanceName"
+	 *		o: create instances corresponding to class succesfully
+	 * 		vJob: ["name":"test_instanceName"]
+	 */
+
+- Case2: rootJobName or instanceName has not defined
+	/**
+	 * Check object instances created from jobname.
+	 * jobfile has not define JOB = [...].
+	 * rootJobName is empty.
+	 * classOfJob has not define.
+	 *
+	 * Expected: 
+	 *		instJobName: is empty
+	 *		rootJobName: is jobFileName
+	 *		vJob: ["name":<jobFileName>]
+	 */
+
+***Unit test getJOBDefinition()
+  input for test function getJOBDefinition(): 
+  	 * fullPathOfFile: path to job file
+  	 * rootJobName: job name
+  	 * instanceName: instance name
+  	 * vJob: a map is empty, definition of job
+  	 * ResourceConstants.DEF_JOB = "JOB"
+
+- Case1: rootJobName and instanceName has defined
+	/**
+	 * Check object instances created from jobname.
+	 * jobfile has define JOB = [name: "test"].
+	 * rootJobName is "test".
+	 * 
+	 * Expected: 
+	 *		instJobName: is "test_instanceName"
+	 * 		vJob: ["name":"test_instanceName"]
+	 */
+
+- Case2: rootJobName or instanceName has not defined
+	/**
+	 * Check object instances created from jobname.
+	 * jobfile has not define JOB = [...].
+	 * rootJobName is empty.
+	 *
+	 * Expected: 
+	 *		instJobName: is empty
+	 *		vJob: ["name":<jobFileName>]
+	 */
+
+***Unit test getJobClassName()
+  input for test function getJobClassName(): 
+  	 * fullPathOfFile: path to job file
+  	 * rootJobName: job name
+  	 * instanceName: instance name
+  	 * vJob: a map is empty, definition of job
+  	 * ResourceConstants.DEF_JOB = "JOB"
+  	 * ResourceConstants.DEF_JOB_CLASS = "jobclass" 
+
+- Case1: get className of job
+	/**
+	 * Check data output corresponding to jobclass has defined in job
+	 * JOB = [name:"test", jobclass:"class_A"] 
+	 *
+	 * Expected: 
+	 *		return jobclassname = class_A
+	 */
+
+***Unit test getJobName()
+
+- Case1: rootJobName has defined
+	/**
+	 * Check name of job corresponding to name defined into jobfile.
+	 * jobfile has define JOB = [name: "test"].
+	 *
+	 * Expected: 
+	 *		return jobName is "test"
+	 */
+
+- Case2: rootJobName has not defined
+	/**
+	 * Check object instances created from jobname.
+	 * jobfile has not define JOB = [...].
+	 * jobfilename is "test_jobFileName"
+	 *
+	 * Expected: 
+	 *		return jobName is "test_jobFileName"
+	 */
+
+***Unit test getMaxRuntime()
+  input for test function getMaxRuntime(): 
+  	 * fullPathOfFile: path to job file
+  	 * rootJobName: job name
+  	 * instanceName: instance name
+  	 * vJob: a map is empty, definition of job
+  	 * ResourceConstants.DEF_JOB = "JOB"
+  	 * ResourceConstants.DEF_JOB_MAXRUN = "maxrun" 
+
+- Case1: get maxrun of job
+	/**
+	 * Check data output corresponding to maxrun has defined in .cls file
+	 * .cls file: {name:"test", maxrun:5}
+	 *
+	 * Expected: 
+	 *		return maxrun = 5
+	 */
+
+***Unit test getMaxWaittime()
+  input for test function getMaxWaittime(): 
+  	 * fullPathOfFile: path to job file
+  	 * rootJobName: job name
+  	 * instanceName: instance name
+  	 * vJob: a map is empty, definition of job
+  	 * ResourceConstants.DEF_JOB = "JOB"
+  	 * ResourceConstants.DEF_JOB_MAXWAIT = "maxwait" 
+
+- Case1: get maxwait of job
+	/**
+	 * Check data output corresponding to maxwait has defined in .cls file
+	 * .cls file: {name:"test", maxwait:5}
+	 *
+	 * Expected: 
+	 *		return maxwait = 5
+	 */
+
+***Unit test execute()
+  input for test function execute(): 
+  	 * params
+  	 * properties: MonitorJobConfigLoader.getProperties()
+  	 * senderList: new ArrayList<Sender>()
+  	 * logger: Logger.getLogger("org.wiperdog.scriptsupport.groovyrunner")
+  	 * ResourceConstants.MONITORJOBDATA_DIRECTORY = "monitorjobfw.directory.monitorjobdata"
+
+- Case1: jobFile has define FETCHACTION
+	/**
+	 * Execute and write data to PERSISTENTDATA, lastExecution file successfully.
+	 * Job file existed.
+	 * 
+	 * Expected: 
+	 *		write data to PERSISTENTDATA, lastExecution file.
+	 */
+
+- Case2: jobFile has define FETCHACTION and ACCUMULATE
+	/**
+	 * Execute and write data to PERSISTENTDATA, prevOUTPUT, lastExecution file successfully.
+	 * Job file existed.
+	 * 
+	 * Expected: 
+	 *		write data to PERSISTENTDATA, prevOUTPUT, lastExecution file.
+	 */
+
+***Unit test getName()
+
+- Case1: rootJobName has defined
+	/**
+	 * Check name of job corresponding to name defined into jobfile.
+	 * jobfile has define JOB = [name: "test"].
+	 *
+	 * Expected: 
+	 *		return jobName is "test"
+	 */
+
+- Case2: rootJobName has not defined
+	/**
+	 * Check object instances created from jobname.
+	 * jobfile has not define JOB = [...].
+	 * jobfilename is "test_jobFileName"
+	 *
+	 * Expected: 
+	 *		return jobName is "test_jobFileName"
+	 */
+
+***Unit test stop()
+  input for test function stop(): 
+  	 * thread: thread need to stop
+
+- Case1: stop thread is running
+	/**
+	 * Check thread has stopped when call func.
+	 * Create thread and run it.
+	 *
+	 * Expected: 
+	 *		thread has stopped
+	 */
+
+***Unit test getArgumentString()
+======> Nothing
+
+
+***Unit test initMonitoringJobData()
+  input for test function initMonitoringJobData(): 
+  	 * binding: getJobInstance().getBinding()
+  	 * PERSISTENTDATA_File: path to PERSISTENTDATA file
+  	 * prevOUTPUT_File: path to prevOUTPUT file
+  	 * lastExecution_File: path to lastExecution File
+  	 * logger: Logger.getLogger("org.wiperdog.scriptsupport.groovyrunner")
+
+- Case1: load data and binding to variable (PERSISTENTDATA, prevOUTPUT and lastExecution)
+	/**
+	 * Get variable with data corresponding to data into file.
+	 * PERSISTENTDATA, prevOUTPUT and lastExecution file existed.
+	 * 
+	 * Expected: 
+	 *		get value corresponding to variable successfully.
+	 */
+
+***Unit test finishMonitoringJobData()
+  input for test function finishMonitoringJobData(): 
+  	 * binding: getJobInstance().getBinding()
+  	 * PERSISTENTDATA_File: path to PERSISTENTDATA file
+  	 * prevOUTPUT_File: path to prevOUTPUT file
+  	 * lastExecution_File: path to lastExecution File
+  	 * logger: Logger.getLogger("org.wiperdog.scriptsupport.groovyrunner")
+
+- Case1: PERSISTENTDATA, prevOUTPUT and lastExecution file existed
+	/**
+	 * Write data to PERSISTENTDATA, prevOUTPUT and lastExecution file.
+	 * Job, PERSISTENTDATA, prevOUTPUT and lastExecution file existed.
+	 * 
+	 * Expected: 
+	 *		write to file successfully.
+	 */
+
+- Case2: PERSISTENTDATA, prevOUTPUT and lastExecution file does not exist
+	/**
+	 * Write data to PERSISTENTDATA, prevOUTPUT and lastExecution file.
+	 * Job file existed.
+	 * PERSISTENTDATA, prevOUTPUT and lastExecution file does not exist.
+	 * 
+	 * Expected: 
+	 *		write to file successfully.
+	 */
+
+***Unit test loadData()
+  input for test function loadData(): 
+  	 * dataFile: File's path to store data
+  	 * dataMap: DataMap to store data on memory
+  	 * jobName: Job's name
+  	 * isLastexecution: flag check lastExecution file exist
+
+- Case1: load data from PERSISTENTDATA and PrevOUTPUT file
+	/**
+	 * Check load data from file existed.
+	 * isLastexecution is false
+	 * 
+	 * Expected: 
+	 *		data: return data loaded from file
+	 */
+
+- Case2: load data from Lastexecution file
+	/**
+	 * Check load data from file existed.
+	 * isLastexecution is false
+	 * 
+	 * Expected: 
+	 *		data: return lastexecution and interval of the current job
+	 */
+
+***Unit test writeData()
+  input for test function writeData(): 
+  	 * data: Data to write into file 
+  	 * dataFile: File's path to store data
+  	 * dataMap: DataMap to store data on memory
+  	 * jobName: Job's name
+
+- Case1: write data is prevOUTPUT or PERSISTENTDATA
+	/**
+	 * Check write data successfully.
+	 * 
+	 * Expected: 
+	 *		file will write to dataFile and name corresponding to jobname.
+	 */
+
+- Case2: write data is lastexecution
+	/**
+	 * Check write data have format Long or Integer.
+	 * 
+	 * Expected: 
+	 *		file will write to dataFile and name corresponding to jobname.
+	 */
+
+***Unit test loadParams()
+  input for test function loadParams(): 
+  	 * jobName: Job name
+  	 * instJobName: instances job name
+  	 * paramsInstances: instance params
+  	 * properties: MonitorJobConfigLoader.getProperties()
+  	 * ResourceConstants.DEFAULT_PARAMETERS_DIRECTORY = "monitorjobfw.directory.defaultparameters"
+  	 * ResourceConstants.JOB_PARAMETERS_DIRECTORY = "monitorjobfw.directory.jobparameters"
+
+- Case1: load default, job and instance params
+	/**
+	 * Check load data from default, job and instance params file.
+	 * 
+	 * Expected: 
+	 *		params: return data corresponding to default, job and instance params file.
+	 */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
