@@ -1,0 +1,5 @@
+JOB = [ name: "job_with_jobclass", jobclass:"CLASS_A" ]
+FETCHACTION={
+   def param = parameters.param
+   return "param : " + param
+}

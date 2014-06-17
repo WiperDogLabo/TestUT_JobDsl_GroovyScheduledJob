@@ -1,0 +1,10 @@
+[
+	inst1: [
+		schedule:"10",
+		params:[]
+	],
+
+	inst2: [
+		schedule:"10"
+	]
+]

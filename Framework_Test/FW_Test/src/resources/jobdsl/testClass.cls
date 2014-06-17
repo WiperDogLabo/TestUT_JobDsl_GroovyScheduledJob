@@ -1,0 +1,1 @@
+name: "CLASS_A", concurrency: 1

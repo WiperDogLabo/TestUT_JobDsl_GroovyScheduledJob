@@ -1,0 +1,4 @@
+JOB = [ name: "test"]
+FETCHACTION={   
+   return "SUCCESS"
+}

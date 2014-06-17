@@ -1,0 +1,5 @@
+JOB = [ name: "job_sleep"]
+FETCHACTION={
+   Thread.currentThread().sleep(3000)
+   return "RESULT"
+}

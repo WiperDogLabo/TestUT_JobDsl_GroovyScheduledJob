@@ -1,0 +1,7 @@
+/**
+ * Normal Job return string "RESULT1" to the caller 
+ */
+JOB = [ name: "TEST1"]
+FETCHACTION = {
+	return "RESULT1"
+}
