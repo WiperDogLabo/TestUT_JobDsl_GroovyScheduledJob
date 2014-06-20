@@ -19,13 +19,15 @@ import org.ops4j.pax.exam.spi.reactors.PerMethod
 import org.ops4j.pax.exam.spi.reactors.PerClass
 import org.junit.runner.JUnitCore
 import org.osgi.service.cm.ManagedService
+import org.slf4j.Logger;
 import org.codehaus.groovy.tools.RootLoader
+import java.util.LinkedHashMap
 
 //@RunWith(PaxExam.class)
 //@ExamReactorStrategy(PerClass.class)
 public class JobDslTest{
 	public static final String PATH_TO_JOBCLASS     = "src/groovy/GroovyScheduledJob.groovy"
-	public static final String PATH_TO_JOBDSLCLASS  = "src/groovy/JobDsl.groovy"
+	public static final String PATH_TO_JOBDSLCLASS  = "src/groovy/JobDsl.groovy"	
 	
 	String path = System.getProperty("user.dir")
 	def jf
@@ -34,7 +36,7 @@ public class JobDslTest{
 	def shell
 	def binding
 	def jobDslInst
-	
+	ClassLoaderUtil lc = new ClassLoaderUtil();
 	public InterruptJobTest() {
 	}	
 	
@@ -64,6 +66,11 @@ public class JobDslTest{
 		wrappedBundle(mavenBundle("c3p0", "c3p0", "0.9.1.2").startLevel(3)),
 		mavenBundle("org.wiperdog", "org.wiperdog.rshell.api", "0.1.0").startLevel(3),
 		mavenBundle("org.quartz-scheduler", "quartz", "2.2.1").startLevel(3),
+		/*mavenBundle("org.wiperdog", "org.wiperdog.configloader", "0.1.0").startLevel(3),
+		mavenBundle("org.wiperdog", "org.wiperdog.directorywatcher", "0.1.0").startLevel(3),
+		mavenBundle("org.wiperdog", "org.wiperdog.rshell.api", "0.1.0").startLevel(3),
+		mavenBundle("org.wiperdog", "org.wiperdog.scriptsupport.groovyrunner", "0.2.0").startLevel(3),
+		*/
 		mavenBundle("org.wiperdog", "org.wiperdog.jobmanager", "0.2.3-SNAPSHOT").startLevel(3),
 		junitBundles()
 		);
@@ -73,19 +80,26 @@ public class JobDslTest{
 	public void setup() throws Exception {		
 		jf = context.getService(context.getServiceReference("org.wiperdog.jobmanager.JobFacade"));
 		URL [] scriptpath123 = [new File(path + "/src/groovy").toURI().toURL()]
-		// Load class using the inherit class loader from parent class loader
-		ClassLoaderUtil lc = new ClassLoaderUtil();
+		// Load class using the inherit class loader from parent class loader		
 		lc.addURL(scriptpath123);		
 		println "***** Start loading reference groovy classes"
 		try{
-			jobExecutableCls = lc.getCls(PATH_TO_JOBCLASS)
-			jobDslCls = lc.getCls(PATH_TO_JOBDSLCLASS)
+			
 			//-- Setting Groovy shell
 			binding = new Binding()
 			binding.setVariable("felix_home", path)
-			RootLoader rootloader = new RootLoader(scriptpath123, lc.getClassLoader())
-			shell = new GroovyShell(rootloader,binding)			
-			jobDslInst = jobDslCls.newInstance(shell, jf, context)			
+						
+			RootLoader rootloader = new RootLoader(scriptpath123, lc.getClzzLoader())
+			shell = new GroovyShell(rootloader, binding)			
+			
+			jobExecutableCls = shell.getClassLoader().loadClass("GroovyScheduledJob")
+			jobDslCls = shell.getClassLoader().loadClass("JobDsl")
+			
+			//jobExecutableCls = lc.getCls(PATH_TO_JOBCLASS)
+			//jobDslCls = lc.getCls(PATH_TO_JOBDSLCLASS)
+			
+			jobDslInst = jobDslCls.newInstance(shell, jf, context)
+			
 		}catch(Exception e){
 		  println "***** "+e
 		}	
@@ -126,5 +140,32 @@ public class JobDslTest{
 		println "***** Test creating job class from file by JobDsl, job class file locate at: "+path + "/src/resources/testJob.instances"
 		boolean ret = jobDslInst.processInstances(new File(path + "/src/resources/jobdsl/testJob.instances"))
 		assertEquals(true, ret)	
+	}
+	//@Test
+	public void processJob_01()throws Exception {
+		shell.getClassLoader().clearCache()
+		 def jobfile = new File(path + "/src/resources/jobdsl/testJob.job")		 
+		 //def clsJob = shell.getClassLoader().parseClass("testJob", "testJob_inst1")
+		 def clsJob = shell.getClassLoader().parseClass(jobfile)
+		 
+		 def instfile = new File(path + "/src/resources/jobdsl/testJob.instances")
+		 def instEval = shell.evaluate(instfile)
+		 def senderClzz = shell.getClassLoader().loadClass('DefaultSender')
+		 def sender = senderClzz.newInstance()
+		 
+		 def listInstances = []
+		 instEval.each {
+		  def mapInstances = [:]		  
+		  mapInstances['instancesName'] = it.key
+		  mapInstances['schedule'] = it.value.schedule
+		  mapInstances['params'] = it.value.params
+		  listInstances.add(mapInstances)
+		 }		 
+		 listInstances.each {mapInstances ->		    
+		    def jobExecutable = jobExecutableCls.newInstance(jobfile.absolutePath, clsJob, mapInstances.params, "testJob", mapInstances.instancesName, sender)
+			//def jobExecutable = jobExecutableCls.newInstance(jobfile.absolutePath, clsJob, sender)			
+			def jobDetail = jf.createJob(jobExecutable)
+		 }	 
+		 assertEquals(true, true)
 	}
 }

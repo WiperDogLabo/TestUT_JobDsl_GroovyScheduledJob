@@ -4,18 +4,23 @@ import groovy.lang.GroovyShell
 import java.io.*
 import groovy.json.*
 import org.codehaus.jackson.*
-import org.apache.log4j.Logger;
+import org.apache.log4j.Logger
+import java.util.LinkedHashMap
+import java.util.Map
 
 /**
  *
  */
-class GroovyScheduledJob implements JobExecutable {
+class GroovyScheduledJob implements JobExecutable, Serializable {
 	String argumentString
 	String fullPathOfFile
 	String fileName
 
 	def classOfJob
-	def jobCaller	
+	def jobCaller
+	def paramsInstances = [:]
+	def vParams = [:]
+	
 	def vJob = [:]
 	
 	def persistentDataMap = [:]
@@ -26,7 +31,7 @@ class GroovyScheduledJob implements JobExecutable {
 	def properties
 	def logger = Logger.getLogger("org.wiperdog.scriptsupport.groovyrunner")
 
-	def paramsInstances = null
+	
 	def rootJobName = null
 	def instanceName = null
 	
@@ -34,11 +39,11 @@ class GroovyScheduledJob implements JobExecutable {
 	List<Sender> senderList = new ArrayList<Sender>()
 	
 	protected boolean isJobFinishedSuccessfully = true
-
+	def shell = new GroovyShell()
 	/**
 	 * constructor
 	 */
-	GroovyScheduledJob(fullPathOfFile, classOfJob, DefaultSender sender) {
+	public GroovyScheduledJob(fullPathOfFile, classOfJob, DefaultSender sender) {
 		this.classOfJob = classOfJob
 		this.fullPathOfFile = fullPathOfFile
 		this.fileName = new	File(this.fullPathOfFile).getName()
@@ -46,11 +51,12 @@ class GroovyScheduledJob implements JobExecutable {
 		this.sender = sender
 	}
 	
-	GroovyScheduledJob(fullPathOfFile, classOfJob, paramsInstances, rootJobName, instanceName, DefaultSender sender) {
+	public GroovyScheduledJob(fullPathOfFile, classOfJob, paramInst, rootJobName, instanceName, DefaultSender sender) {
 		this.classOfJob = classOfJob		
 		this.fullPathOfFile = fullPathOfFile
-		this.fileName = new	File(this.fullPathOfFile).getName()	
-		this.paramsInstances = paramsInstances
+		this.fileName = new	File(this.fullPathOfFile).getName()		
+		this.paramsInstances = paramInst	
+		this.vParams = paramInst
 		this.rootJobName = rootJobName
 		this.instanceName = instanceName
 		properties = MonitorJobConfigLoader.getProperties()
@@ -61,8 +67,7 @@ class GroovyScheduledJob implements JobExecutable {
 	 * 
 	 * @return
 	 */
-	Object getJobInstance() {	
-		def shell = new GroovyShell()
+	def getJobInstance() {
 		def binding
 		def jobName		
 		def jobFileName = (new File(this.fullPathOfFile)).getName().replaceFirst(~/\.[^\.]+$/, '')
@@ -102,7 +107,12 @@ class GroovyScheduledJob implements JobExecutable {
 		def o = classOfJob.newInstance()
 		// initialize variables
 		binding = o.getBinding()
-		params = loadParams(jobName, instJobName, paramsInstances, properties)
+		/*def cloneParams = new LinkedHashMap()
+		this.paramsInstances.each{
+			cloneParams[it.key] = it.value
+		}*/
+		//Avoid invalid argument exception we need to clone the map insteadof direct usage
+		params = loadParams(jobName, instJobName, this.paramsInstances, this.properties)
 		binding.setVariable('parameters', params)
 		o.run()
 		if (binding.hasVariable(ResourceConstants.DEF_JOB)) {
@@ -121,17 +131,18 @@ class GroovyScheduledJob implements JobExecutable {
 		return o
 	}
 
-	def getJOBDefinition() {
+	def getJOBDefinition() {		
 		//Get instance job name
 		def instJobName = null
 		if ((this.rootJobName != null) && (this.instanceName != null)) {
 			instJobName = this.rootJobName + "_" + this.instanceName
-		}
-		
+		}		
 		if (vJob ==[:]) {
-		def jobFileName = (new File(this.fullPathOfFile)).getName().replaceFirst(~/\.[^\.]+$/, '')
+			def jobFileFullName = (new File(this.fullPathOfFile)).getName() 
+			def jobFileName = jobFileFullName.replaceFirst(~/\.[^\.]+$/, '')
 			def oJob = getJobInstance()
 			def binding = oJob.getBinding()
+			
 			if (binding.hasVariable(ResourceConstants.DEF_JOB)) {
 				vJob = binding.getVariable(ResourceConstants.DEF_JOB)
 				if( vJob[ResourceConstants.DEF_JOB_NAME] == null ){
@@ -154,7 +165,7 @@ class GroovyScheduledJob implements JobExecutable {
 		return vJob[ResourceConstants.DEF_JOB_CLASS]
 	}
 
-	String getJobName() {
+	String getJobName() {		
 		getJOBDefinition()
 		return vJob[ResourceConstants.DEF_JOB_NAME]
 	}
@@ -364,19 +375,18 @@ class GroovyScheduledJob implements JobExecutable {
 	 * load parameters
 	 * @param jobName Job's name
 	 * @param instJobName instancesJob's name
-	 * @param paramsInstances instance's params
+	 * @param paramsInsts instance's params
 	 * @param properties properties
 	 * @return params
 	 */
-	public loadParams(jobName, instJobName, paramsInstances, properties){
-		def shell = new GroovyShell()
+	def loadParams(jobName, instJobName, paramsInstances, properties){		
 		def fileParams
 		def instFileParams
-		def params = []
+		def tempParams = [:]
 		//default params file
 		fileParams = new File(properties.get(ResourceConstants.DEFAULT_PARAMETERS_DIRECTORY) + "/default.params")
 		if (fileParams.exists()) {
-			params = shell.evaluate(fileParams)
+			tempParams = shell.evaluate(fileParams)
 		}
 		// file storing parameters
 		fileParams = new File(properties.get(ResourceConstants.JOB_PARAMETERS_DIRECTORY) + "/" + jobName +  ".params")
@@ -384,7 +394,7 @@ class GroovyScheduledJob implements JobExecutable {
 			def paramsJob
 			paramsJob = shell.evaluate(fileParams)
 			paramsJob.each {
-				params[it.key] = it.value
+				tempParams[it.key] = it.value
 			}
 		}
 		// load name instance
@@ -394,17 +404,18 @@ class GroovyScheduledJob implements JobExecutable {
 				def paramsInst
 				paramsInst = shell.evaluate(instFileParams)
 				paramsInst.each {
-					params[it.key] = it.value
+					tempParams[it.key] = it.value
 				}
 			}
 		}
 		
-		if(paramsInstances != null) {
-			paramsInstances.each {
-				params[it.key] = it.value
+		
+		if(this.paramsInstances != null) {
+			this.paramsInstances.each {				
+				tempParams.putAt(it.key, it.value)
 			}
 		}
-		return params;
+		return tempParams;
 	}
 }
 

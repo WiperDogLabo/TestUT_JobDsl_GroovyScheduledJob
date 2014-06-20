@@ -1,0 +1,7 @@
+JOB = [ name: "job_normal"]
+FETCHACTION={
+   PERSISTENTDATA['test']='TestPersistentData'
+   prevOUTPUT['test']='TestPrevOutput'
+   lastexecution=12121
+   return "RESULT"
+}

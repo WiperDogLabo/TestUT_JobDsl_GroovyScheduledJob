@@ -34,7 +34,7 @@ public class GroovyScheduledJobTest{
 	def jobExecutableInst
 	def shell
 	def binding
-	ClassLoaderUtil lc = new ClassLoaderUtil();
+	ClassLoaderUtil clzzLoaderUtl = new ClassLoaderUtil();	
 	
 	public InterruptJobTest() {
 	}		
@@ -76,16 +76,17 @@ public class GroovyScheduledJobTest{
 		jf = context.getService(context.getServiceReference("org.wiperdog.jobmanager.JobFacade"));
 		URL [] scriptpath123 = [new File(path + "/src/groovy").toURI().toURL()]
 		// Load class using the inherit class loader from parent class loader		
-		lc.addURL(scriptpath123);		
+		clzzLoaderUtl.addURL(scriptpath123);		
 		println "***** Start loading reference groovy classes"
-		try{
-			jobExecutableCls = lc.getCls(PATH_TO_JOBCLASS)
+		try{			
 			//-- Setting Groovy shell
 			binding = new Binding()
 			binding.setVariable("felix_home", path)
 			//-- Merging class loader 
-			RootLoader rootloader = new RootLoader(scriptpath123, lc.getClassLoader())
+			RootLoader rootloader = new RootLoader(scriptpath123, clzzLoaderUtl.getClzzLoader())
 			shell = new GroovyShell(rootloader,binding)
+			jobExecutableCls = shell.getClassLoader().loadClass("GroovyScheduledJob")
+			
 		}catch(Exception e){
 		  println "***** "+e
 		}	
@@ -196,23 +197,23 @@ public class GroovyScheduledJobTest{
 	}
 	
 	//@Test
-	public void execute() throws Exception {	
+	public void execute() throws Exception {		
+		
 		def loader = shell.getClassLoader()
 		loader.clearCache()
-		def senderClzz = loader.loadClass('DefaultSender')
-		def sender = senderClzz.newInstance()
+		
 		def jobFile = new File(path + "/src/resources/scheduledjob/job_normal.job")
 		def clsJob = shell.getClassLoader().parseClass(jobFile)
+		
+		def senderClzz = loader.loadClass('DefaultSender')
+		def sender = senderClzz.newInstance()
 		 
 		jobExecutableInst = jobExecutableCls.newInstance(jobFile.absolutePath, clsJob, sender)		
 		def jobName = jobExecutableInst.getJobName()
-				
-		def jobCallerClzz = loader.loadClass('DefaultJobCaller')
-		
-		def jobCaller = jobCallerClzz.newInstance(jobExecutableInst.getJobInstance(),jobFile.getName(), "job_normal", null, sender)
-		def rv = jobCaller.start(null, new ArrayList())
-		
-		def isJobFinishedSuccessfully = jobCaller.isJobFinishedSuccessfully
+		def wpdJobDataMapClzz = shell.getClassLoader().loadClass("WpdJobDataMap")
+		def wpdJobDataMap = wpdJobDataMapClzz.newInstance()
+		def rv = jobExecutableInst.execute(wpdJobDataMap)		
+		def isJobFinishedSuccessfully = jobExecutableInst.isJobFinishedSuccessfully
 		assertEquals(true, isJobFinishedSuccessfully)
 		assertNotEquals(rv.indexOf('RESULT'), -1)
 	}
@@ -221,34 +222,32 @@ public class GroovyScheduledJobTest{
 	public void getJobExecutedStatus() throws Exception {	
 		def loader = shell.getClassLoader()
 		loader.clearCache()
+		
 		def senderClzz = loader.loadClass('DefaultSender')
 		def sender = senderClzz.newInstance()
 		def jobFile = new File(path + "/src/resources/scheduledjob/job_sleep.job")
 		def clsJob = shell.getClassLoader().parseClass(jobFile)
-		 
-		jobExecutableInst = jobExecutableCls.newInstance(jobFile.absolutePath, clsJob, sender)
-		def jobName = jobExecutableInst.getJobName()
-				
-		def jobCallerClzz = loader.loadClass('DefaultJobCaller')
-		
-		def jobCaller = jobCallerClzz.newInstance(jobExecutableInst.getJobInstance(),jobFile.getName(), "job_sleep", null, sender)
-		def rv
+		def jobInstance = jobExecutableCls.newInstance(jobFile.absolutePath, clsJob, sender)
+		jobInstance.isJobFinishedSuccessfully = false
+		def rv = null
 		// Define new Thread to execute the job, because the job will be slept for 3 second while
 		// this main thread still running independently
 		def t = new Thread(new Runnable(){
 			void run() {
-				rv = jobCaller.start(null, new ArrayList())
+				def wpdJobDataMapClzz = shell.getClassLoader().loadClass("WpdJobDataMap")
+				def wpdJobDataMap = wpdJobDataMapClzz.newInstance()
+				rv = jobInstance.execute(wpdJobDataMap)
 			}
 		})
 		t.start()
 		// At this time Job still not finished in above thread (sleep 3 second), expected executed status should be false
-		def isJobFinishedSuccessfully = jobCaller.isJobFinishedSuccessfully
+		def isJobFinishedSuccessfully = jobInstance.isJobFinishedSuccessfully
 		assertEquals(false, isJobFinishedSuccessfully)
 		
 		//Sleep main thread for 6 seconds to wait the job to be done
 		Thread.sleep(6000)
 		// re-assign executed status, should be true by now
-		isJobFinishedSuccessfully = jobCaller.isJobFinishedSuccessfully		
+		isJobFinishedSuccessfully = jobInstance.isJobFinishedSuccessfully		
 		assertEquals(true, isJobFinishedSuccessfully)		
 		// Finally assert the return value (String of 'RESULT')
 		assertNotEquals(rv.indexOf('RESULT'), -1)
@@ -263,35 +262,35 @@ public class GroovyScheduledJobTest{
 		def jobFile = new File(path + "/src/resources/scheduledjob/job_sleep.job")
 		def clsJob = shell.getClassLoader().parseClass(jobFile)
 		 
-		jobExecutableInst = jobExecutableCls.newInstance(jobFile.absolutePath, clsJob, sender)
-		def jobName = jobExecutableInst.getJobName()
-				
-		def jobCallerClzz = loader.loadClass('DefaultJobCaller')
+		def jobInstance = jobExecutableCls.newInstance(jobFile.absolutePath, clsJob, sender)
+		jobInstance.isJobFinishedSuccessfully = false
 		
-		def jobCaller = jobCallerClzz.newInstance(jobExecutableInst.getJobInstance(),jobFile.getName(), "job_sleep", null, sender)
 		def rv = null
 		// Define new Thread to execute the job, because the job will be slept for 3 second while
 		// this main thread still running independently
 		def t = new Thread(new Runnable(){
 			void run() {
 				try{
-					rv = jobCaller.start(null, new ArrayList())
+					def wpdJobDataMapClzz = shell.getClassLoader().loadClass("WpdJobDataMap")
+					def wpdJobDataMap = wpdJobDataMapClzz.newInstance()
+					rv = jobInstance.execute(wpdJobDataMap)
 				}catch(Throwable ta){
 					// ignore
 				}
 			}
 		})
 		t.start()
-		jobExecutableInst.stop(t)
+		jobInstance.stop(t)
 		//Job has been interrupted while sleeping so status should remain in false
-		def isJobFinishedSuccessfully = jobCaller.isJobFinishedSuccessfully
+		def isJobFinishedSuccessfully = jobInstance.isJobFinishedSuccessfully
 		assertEquals(false, isJobFinishedSuccessfully)		
 		//Finally assert the return value (null)
 		assertEquals(rv, null)
 	}
 	
 	@Test
-	public void loadData() throws Exception {		 
+	public void loadData() throws Exception {		
+		
 		def loader = shell.getClassLoader()
 		loader.clearCache()
 		def senderClzz = loader.loadClass('DefaultSender')
@@ -300,44 +299,60 @@ public class GroovyScheduledJobTest{
 		def jobFile = new File(path + "/src/resources/scheduledjob/job_normal.job")
 		def clsJob = loader.parseClass(jobFile)
 		 
-		jobExecutableInst = jobExecutableCls.newInstance(jobFile.absolutePath, clsJob, sender)
-		def jobName = jobExecutableInst.getJobName()
-				
-		def jobCallerClzz = loader.loadClass('DefaultJobCaller')
+		def jobInstance = jobExecutableCls.newInstance(jobFile.absolutePath, clsJob, sender)
+		jobInstance.isJobFinishedSuccessfully = false
+		println "Start executed....................." + jobFile.absolutePath
+		def jobName = jobInstance.getName()
 		
-		def jobCaller = jobCallerClzz.newInstance(jobExecutableInst.getJobInstance(),jobFile.getName(), "job_sleep", null, sender)
-		def rv = null
 		
-		// Define new Thread to execute the job, because the job will be slept for 3 second while
-		// this main thread still running independently
-		def t = new Thread(new Runnable(){
-			void run() {
-				try{
-					rv = jobCaller.start(null, new ArrayList())
-				}catch(Throwable ta){
-					// ignore
-				}
-			}
-		})
-		t.start()
+		def wpdJobDataMapClzz = shell.getClassLoader().loadClass("WpdJobDataMap")
+		def wpdJobDataMap = wpdJobDataMapClzz.newInstance()
+		
+		def rv = jobInstance.execute(wpdJobDataMap)		
+		println "After executed....................."
+		def jobConfigLoaderClzz = loader.loadClass("MonitorJobConfigLoader")
+		def jobConfigLoader = jobConfigLoaderClzz.newInstance(context)
+		def resConstClzz = loader.loadClass("ResourceConstants")
+		def props = jobConfigLoader.getProperties()
+		
+		def PERSISTENTDATA_File = new File(props.get(resConstClzz.MONITORJOBDATA_DIRECTORY) + "/monitorjobdata/PersistentData/" + jobName + ".txt")
+		def prevOUTPUT_File = new File(props.get(resConstClzz.MONITORJOBDATA_DIRECTORY) + "/monitorjobdata/PrevOUTPUT/" + jobName + ".txt")
+		def lastExecution_File = new File(props.get(resConstClzz.MONITORJOBDATA_DIRECTORY) + "/monitorjobdata/LastExecution/" + jobName + ".txt")		
+		
+		def PERSISTENTDATA = null
+		PERSISTENTDATA = jobInstance.loadData(PERSISTENTDATA_File, jobInstance.persistentDataMap, jobName)		
+		println "CONTENT PERSISTENTDATA: "+PERSISTENTDATA
+		assertNotNull(PERSISTENTDATA)
+		
+		def prevOUTPUT = null
+		prevOUTPUT = jobInstance.loadData(prevOUTPUT_File, jobInstance.prevOUTPUTMap, jobName)
+		println "CONTENT prevOUTPUT: "+prevOUTPUT
+		assertNotNull(prevOUTPUT)
+	}	
+	@Test
+	public void loadParam() throws Exception{
+		//jobName, instJobName, paramsInstances, properties		
+		try{
+		def loader = shell.getClassLoader()
+		loader.clearCache()
+		def senderClzz = loader.loadClass('DefaultSender')
+		def sender = senderClzz.newInstance()
+		
+		def jobFile = new File(path + "/src/resources/scheduledjob/job_normal.job")
+		def clsJob = loader.parseClass(jobFile)
+		 
+		def jobInstance = jobExecutableCls.newInstance(jobFile.absolutePath, clsJob, sender)
+		jobInstance.isJobFinishedSuccessfully = false
+		def jobName = jobInstance.getJobName()
+		def wpdJobDataMapClzz = shell.getClassLoader().loadClass("WpdJobDataMap")
+		def wpdJobDataMap = wpdJobDataMapClzz.newInstance()
+		def rv = jobInstance.execute(wpdJobDataMap)
 		
 		def jobConfigLoaderClzz = loader.loadClass("MonitorJobConfigLoader")
 		def jobConfigLoader = jobConfigLoaderClzz.newInstance(context)
 		def resConstClzz = loader.loadClass("ResourceConstants")
 		def properties = jobConfigLoader.getProperties()
-		
-		def PERSISTENTDATA_File = new File(properties.get(resConstClzz.MONITORJOBDATA_DIRECTORY) + "/monitorjobdata/PersistentData/" + jobName + ".txt")
-		def prevOUTPUT_File = new File(properties.get(resConstClzz.MONITORJOBDATA_DIRECTORY) + "/monitorjobdata/PrevOUTPUT/" + jobName + ".txt")
-		def lastExecution_File = new File(properties.get(resConstClzz.MONITORJOBDATA_DIRECTORY) + "/monitorjobdata/LastExecution/" + jobName + ".txt")
-		/*println "***************** "+PERSISTENTDATA_File.getAbsolutePath()
-		println "***************** "+prevOUTPUT_File.getAbsolutePath()
-		println "***************** "+lastExecution_File.getAbsolutePath()*/
-		def data = [:]
-	}
-	
-	
-	//@Test
-	public void loadParams() throws Exception {	
-		
+		def result = jobInstance.loadParam(jobName, null, jobInstance.paramsInstances, properties)		
+		}catch(Exception e){println e}
 	}
 }
