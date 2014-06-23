@@ -21,67 +21,67 @@
 	 * mapJobListInstances: a map instances corresponding to job existing
 	 * 			 	mapJobListInstances=  ["jobName": [jobname_instance1, jobname_instance2, ...], ...]
 
-- Case1: with job and trigger
-	/**
-	 * Check output when remove jobfile with folder contains the trigger corresponding to jobname remove.
-	 *
-	 * Expected: 
-	 * 		lstTriggerWaitJob: add trigger wait job corresponding
-	 * 		lstJobWaitJobClass: remove data with key corresponding to jobname remove
-	 *		jobfacade: remove jobdetail corresponding to jobname remove
-	 *		mapJobJobFile: remove data with key corresponding to jobname remove
-	 *		mapJobDefaultSchedule: remove data with key corresponding to jobname remove
-	 *		mapJobListInstances: remove data with keys corresponding to jobname remove
-	 * 		return true when run this function
-	 */
-	 
-- Case2: with job, trigger, class
-	/**
-	 * Check output when remove jobfile with folder contains the trigger and class corresponding to jobname remove.
-	 * 
-	 * Expected: 
-	 * 		lstTriggerWaitJob: add trigger wait job corresponding
-	 * 		lstJobWaitJobClass: remove data with key corresponding to jobname remove
-	 *		jobfacade: remove jobdetail corresponding to jobname remove
-	 *		mapJobJobFile: remove data with key corresponding to jobname remove
-	 *		mapJobDefaultSchedule: remove data with key corresponding to jobname remove
-	 *		mapJobListInstances: remove data with keys corresponding to jobname remove
-	 * 		return true when run this function
-	 */
+	- Case1: with job and trigger
+		/**
+		 * Check output when remove jobfile with folder contains the trigger corresponding to jobname remove.
+		 *
+		 * Expected: 
+		 * 		lstTriggerWaitJob: add trigger wait job corresponding
+		 * 		lstJobWaitJobClass: remove data with key corresponding to jobname remove
+		 *		jobfacade: remove jobdetail corresponding to jobname remove
+		 *		mapJobJobFile: remove data with key corresponding to jobname remove
+		 *		mapJobDefaultSchedule: remove data with key corresponding to jobname remove
+		 *		mapJobListInstances: remove data with keys corresponding to jobname remove
+		 * 		return true when run this function
+		 */
+		 
+	- Case2: with job, trigger, class
+		/**
+		 * Check output when remove jobfile with folder contains the trigger and class corresponding to jobname remove.
+		 * 
+		 * Expected: 
+		 * 		lstTriggerWaitJob: add trigger wait job corresponding
+		 * 		lstJobWaitJobClass: remove data with key corresponding to jobname remove
+		 *		jobfacade: remove jobdetail corresponding to jobname remove
+		 *		mapJobJobFile: remove data with key corresponding to jobname remove
+		 *		mapJobDefaultSchedule: remove data with key corresponding to jobname remove
+		 *		mapJobListInstances: remove data with keys corresponding to jobname remove
+		 * 		return true when run this function
+		 */
 
-- Case3: with job, trigger, instances
-	/**
-	 * Check output when remove jobfile with folder contains the trigger and instances corresponding to jobname remove.
-	 * 
-	 * Expected: 
-	 * 		lstTriggerWaitJob: add trigger wait job corresponding
-	 *		lstTriggerWaitJob: add trigger wait instance
-	 * 		mapInstancesWaitJob: add instances wait job
-	 * 		lstJobWaitJobClass: remove data with key corresponding to jobname remove
-	 *		jobfacade: unschedule instance of job with trigger
-	 *		jobfacade: remove jobdetail corresponding to jobname remove
-	 *		mapJobJobFile: remove data with key corresponding to jobname remove
-	 *		mapJobDefaultSchedule: remove data with key corresponding to jobname remove
-	 *		mapJobListInstances: remove data with keys corresponding to jobname remove
-	 *		return true when run this function
-	 */
+	- Case3: with job, trigger, instances
+		/**
+		 * Check output when remove jobfile with folder contains the trigger and instances corresponding to jobname remove.
+		 * 
+		 * Expected: 
+		 * 		lstTriggerWaitJob: add trigger wait job corresponding
+		 *		lstTriggerWaitJob: add trigger wait instance
+		 * 		mapInstancesWaitJob: add instances wait job
+		 * 		lstJobWaitJobClass: remove data with key corresponding to jobname remove
+		 *		jobfacade: unschedule instance of job with trigger
+		 *		jobfacade: remove jobdetail corresponding to jobname remove
+		 *		mapJobJobFile: remove data with key corresponding to jobname remove
+		 *		mapJobDefaultSchedule: remove data with key corresponding to jobname remove
+		 *		mapJobListInstances: remove data with keys corresponding to jobname remove
+		 *		return true when run this function
+		 */
 
-- Case4: with job, trigger, class, instances
-	/**
-	 * Check output when remove jobfile with folder contains the trigger, class and instances corresponding to jobname remove.
-	 * 
-	 * Expected: 
-	 * 		lstTriggerWaitJob: add trigger wait job corresponding
-	 *		lstTriggerWaitJob: add trigger wait instance
-	 * 		mapInstancesWaitJob: add instances wait job
-	 * 		lstJobWaitJobClass: remove data with key corresponding to jobname remove
-	 *		jobfacade: unschedule instance of job with trigger
-	 *		jobfacade: remove jobdetail corresponding to jobname remove
-	 *		mapJobJobFile: remove data with key corresponding to jobname remove
-	 *		mapJobDefaultSchedule: remove data with key corresponding to jobname remove
-	 *		mapJobListInstances: remove data with keys corresponding to jobname remove
-	 *		return true when run this function
-	 */
+	- Case4: with job, trigger, class, instances
+		/**
+		 * Check output when remove jobfile with folder contains the trigger, class and instances corresponding to jobname remove.
+		 * 
+		 * Expected: 
+		 * 		lstTriggerWaitJob: add trigger wait job corresponding
+		 *		lstTriggerWaitJob: add trigger wait instance
+		 * 		mapInstancesWaitJob: add instances wait job
+		 * 		lstJobWaitJobClass: remove data with key corresponding to jobname remove
+		 *		jobfacade: unschedule instance of job with trigger
+		 *		jobfacade: remove jobdetail corresponding to jobname remove
+		 *		mapJobJobFile: remove data with key corresponding to jobname remove
+		 *		mapJobDefaultSchedule: remove data with key corresponding to jobname remove
+		 *		mapJobListInstances: remove data with keys corresponding to jobname remove
+		 *		return true when run this function
+		 */
 
 ***Unit test removeInstances()	
 	Process remove data from scheduler when delete instances file.
@@ -96,38 +96,38 @@
 	 * mapJobListInstances: a map instances corresponding to job existing
 	 * 			 	mapJobListInstances=  ["instFileName": [jobname_instance1, jobname_instance2, ...], ...]
 
-- Case1: with job, instances
-	/**
-	 * Check output when remove instances with folder contains the job corresponding to instances remove.
-	 *
-	 * Expected: 
-	 * 		jobfacade: remove jobdetail corresponding to instances name remove
-	 * 		mapInstancesWaitJob: remove instances corresponding
-	 * 		mapJobListInstances: remove data with keys corresponding to jobname of instances
-	 * 		mapInstFileListInsts: remove data with keys corresponding to instances file name
-	 */
+	- Case1: with job, instances
+		/**
+		 * Check output when remove instances with folder contains the job corresponding to instances remove.
+		 *
+		 * Expected: 
+		 * 		jobfacade: remove jobdetail corresponding to instances name remove
+		 * 		mapInstancesWaitJob: remove instances corresponding
+		 * 		mapJobListInstances: remove data with keys corresponding to jobname of instances
+		 * 		mapInstFileListInsts: remove data with keys corresponding to instances file name
+		 */
 
-- Case2: with job, trigger, instances
-	/**
-	 * Check output when remove instances with folder contains the job and trigger corresponding to instances remove.
-	 *
-	 * Expected: 
-	 * 		jobfacade: remove jobdetail corresponding to instances name remove
-	 * 		mapInstancesWaitJob: remove instances corresponding
-	 * 		mapJobListInstances: remove data with keys corresponding to jobname of instances
-	 * 		mapInstFileListInsts: remove data with keys corresponding to instances file name
-	 */
+	- Case2: with job, trigger, instances
+		/**
+		 * Check output when remove instances with folder contains the job and trigger corresponding to instances remove.
+		 *
+		 * Expected: 
+		 * 		jobfacade: remove jobdetail corresponding to instances name remove
+		 * 		mapInstancesWaitJob: remove instances corresponding
+		 * 		mapJobListInstances: remove data with keys corresponding to jobname of instances
+		 * 		mapInstFileListInsts: remove data with keys corresponding to instances file name
+		 */
 
-- Case3: with job, trigger, instances, class
-	/**
-	 * Check output when remove instances with folder contains the job, trigger and class corresponding to instances remove.
-	 *
-	 * Expected: 
-	 * 		jobfacade: remove jobdetail corresponding to instances name remove
-	 * 		mapInstancesWaitJob: remove instances corresponding
-	 * 		mapJobListInstances: remove data with keys corresponding to jobname of instances
-	 * 		mapInstFileListInsts: remove data with keys corresponding to instances file name
-	 */
+	- Case3: with job, trigger, instances, class
+		/**
+		 * Check output when remove instances with folder contains the job, trigger and class corresponding to instances remove.
+		 *
+		 * Expected: 
+		 * 		jobfacade: remove jobdetail corresponding to instances name remove
+		 * 		mapInstancesWaitJob: remove instances corresponding
+		 * 		mapJobListInstances: remove data with keys corresponding to jobname of instances
+		 * 		mapInstFileListInsts: remove data with keys corresponding to instances file name
+		 */
 
 ***Unit test removeTrigger()	
 	Process remove data from scheduler when delete trigger file.
@@ -142,27 +142,27 @@
   	 *				lstTriggerWaitJob = [ ["jobName": <jobFile>, "trigger":<trg_of_job>], ... ] 
 	 * jobfacade: define by JobFacade
 
-- Case1: with job, trigger
-	/**
-	 * Check output when remove trigger with folder contains the job corresponding to trigger remove.
-	 *
-	 * Expected: 
-	 * 		lstTriggerWaitAll: remove data with keys corresponding to trigger remove
-	 * 		lstTriggerWaitJob: remove data with keys corresponding to trigger remove
-	 * 		jobfacade: unschedule of job corresponding to trigger remove
-	 * 		mapTrgFileListTrgs: remove data with keys corresponding to trigger file
-	 */
+	- Case1: with job, trigger
+		/**
+		 * Check output when remove trigger with folder contains the job corresponding to trigger remove.
+		 *
+		 * Expected: 
+		 * 		lstTriggerWaitAll: remove data with keys corresponding to trigger remove
+		 * 		lstTriggerWaitJob: remove data with keys corresponding to trigger remove
+		 * 		jobfacade: unschedule of job corresponding to trigger remove
+		 * 		mapTrgFileListTrgs: remove data with keys corresponding to trigger file
+		 */
 
-- Case2: with job, class, trigger
-	/**
-	 * Check output when remove trigger with folder contains the job and class corresponding.
-	 *
-	 * Expected: 
-	 * 		lstTriggerWaitAll: remove data with keys corresponding to trigger remove
-	 * 		lstTriggerWaitJob: remove data with keys corresponding to trigger remove
-	 * 		jobfacade: unschedule of job corresponding to trigger remove
-	 * 		mapTrgFileListTrgs: remove data with keys corresponding to trigger file
-	 */
+	- Case2: with job, class, trigger
+		/**
+		 * Check output when remove trigger with folder contains the job and class corresponding.
+		 *
+		 * Expected: 
+		 * 		lstTriggerWaitAll: remove data with keys corresponding to trigger remove
+		 * 		lstTriggerWaitJob: remove data with keys corresponding to trigger remove
+		 * 		jobfacade: unschedule of job corresponding to trigger remove
+		 * 		mapTrgFileListTrgs: remove data with keys corresponding to trigger file
+		 */
 
 ***Unit test removeJobCls()	
 	Process remove data from scheduler when delete jobClass file.
@@ -181,44 +181,44 @@
   	 * lstJobWaitJobClass: is list trigger waiting because job waiting for job class
   	 *				lstJobWaitJobClass = [ ["jobClass":<jobClassName>, "jobName":<jobName>], ...]
 
-- Case1: with job, class
-	/**
-	 * Check output when remove jobClass with folder contains the job corresponding to class remove.
-	 *
-	 * Expected: 
-	 * 		lstTriggerWaitJob: add trigger wait job corresponding
-	 *		lstTriggerWaitAll: add trigger wait job and class
-	 *		jobfacade: unschedule trigger of job
-	 *		jobfacade: delete job class corresponding to class file name
-	 *		lstJobWaitJobClass: list job wait job class add map = ["jobName":<jobName>, "jobClass":<jobClassName>]
-	 * 		mapJobInCls: remove job class name
-	 */
+	- Case1: with job, class
+		/**
+		 * Check output when remove jobClass with folder contains the job corresponding to class remove.
+		 *
+		 * Expected: 
+		 * 		lstTriggerWaitJob: add trigger wait job corresponding
+		 *		lstTriggerWaitAll: add trigger wait job and class
+		 *		jobfacade: unschedule trigger of job
+		 *		jobfacade: delete job class corresponding to class file name
+		 *		lstJobWaitJobClass: list job wait job class add map = ["jobName":<jobName>, "jobClass":<jobClassName>]
+		 * 		mapJobInCls: remove job class name
+		 */
 
-- Case2: with job, class, trigger
-	/**
-	 * Check output when remove jobClass with folder contains the job and trigger corresponding to class remove.
-	 *
-	 * Expected: 
-	 * 		lstTriggerWaitJob: add trigger wait job corresponding
-	 *		lstTriggerWaitAll: add trigger wait job and class
-	 *		jobfacade: unschedule trigger of job
-	 *		jobfacade: delete job class corresponding to class file name
-	 *		lstJobWaitJobClass: list job wait job class will be add map = ["jobName":<jobName>, "jobClass":<jobClassName>]
-	 * 		mapJobInCls: remove job class name
-	 */
+	- Case2: with job, class, trigger
+		/**
+		 * Check output when remove jobClass with folder contains the job and trigger corresponding to class remove.
+		 *
+		 * Expected: 
+		 * 		lstTriggerWaitJob: add trigger wait job corresponding
+		 *		lstTriggerWaitAll: add trigger wait job and class
+		 *		jobfacade: unschedule trigger of job
+		 *		jobfacade: delete job class corresponding to class file name
+		 *		lstJobWaitJobClass: list job wait job class will be add map = ["jobName":<jobName>, "jobClass":<jobClassName>]
+		 * 		mapJobInCls: remove job class name
+		 */
 
-- Case3: with job, class, trigger, instances
-	/**
-	 * Check output when remove jobClass with folder contains the job, trigger and instances corresponding to class remove.
-	 *
-	 * Expected: 
-	 * 		lstTriggerWaitJob: add trigger wait job corresponding
-	 *		lstTriggerWaitAll: add trigger wait job and class
-	 *		jobfacade: unschedule trigger of job
-	 *		jobfacade: delete job class corresponding to class file name
-	 *		lstJobWaitJobClass: list job wait job class add map = ["jobName":<jobName>, "jobClass":<jobClassName>]
-	 * 		mapJobInCls: remove job class name
-	 */
+	- Case3: with job, class, trigger, instances
+		/**
+		 * Check output when remove jobClass with folder contains the job, trigger and instances corresponding to class remove.
+		 *
+		 * Expected: 
+		 * 		lstTriggerWaitJob: add trigger wait job corresponding
+		 *		lstTriggerWaitAll: add trigger wait job and class
+		 *		jobfacade: unschedule trigger of job
+		 *		jobfacade: delete job class corresponding to class file name
+		 *		lstJobWaitJobClass: list job wait job class add map = ["jobName":<jobName>, "jobClass":<jobClassName>]
+		 * 		mapJobInCls: remove job class name
+		 */
 
 ***Unit test processCreateTrigger()
 	create trigger for corresponding schedule and jobname
@@ -228,50 +228,50 @@
 	 * jobname: name of job
   	 * jobfacade: define by JobFacade
 
-- Case1: with schedule is number
-	/**
-	 * Check output when create trigger with schedule is number.
-	 *
-	 * Expected: 
-	 *		jobfacade: create trigger for job successfully.
-	 *		trigger: exist schedule for job
-	 */
+	- Case1: with schedule is number
+		/**
+		 * Check output when create trigger with schedule is number.
+		 *
+		 * Expected: 
+		 *		jobfacade: create trigger for job successfully.
+		 *		trigger: exist schedule for job
+		 */
 
-- Case2: with schedule contains "i"
-	/**
-	 * Check output when create trigger with schedule contains "i" (Ex: 10i).
-	 *
-	 * Expected: 
-	 *		jobfacade: create trigger for job successfully.
-	 *		trigger: exist schedule for job
-	 */
+	- Case2: with schedule contains "i"
+		/**
+		 * Check output when create trigger with schedule contains "i" (Ex: 10i).
+		 *
+		 * Expected: 
+		 *		jobfacade: create trigger for job successfully.
+		 *		trigger: exist schedule for job
+		 */
 
-- Case3: with schedule is crontab
-	/**
-	 * Check output when create trigger with schedule is crontab (Ex: 0/10 * * * * ?).
-	 *
-	 * Expected: 
-	 *		jobfacade: create trigger for job successfully.
-	 *		trigger: exist schedule for job
-	 */
+	- Case3: with schedule is crontab
+		/**
+		 * Check output when create trigger with schedule is crontab (Ex: 0/10 * * * * ?).
+		 *
+		 * Expected: 
+		 *		jobfacade: create trigger for job successfully.
+		 *		trigger: exist schedule for job
+		 */
 
-- Case4: with schedule is "now"
-	/**
-	 * Check output when create trigger with schedule is "now".
-	 *
-	 * Expected: 
-	 *		jobfacade: create trigger for job successfully.
-	 *		trigger: exist schedule for job
-	 */
+	- Case4: with schedule is "now"
+		/**
+		 * Check output when create trigger with schedule is "now".
+		 *
+		 * Expected: 
+		 *		jobfacade: create trigger for job successfully.
+		 *		trigger: exist schedule for job
+		 */
 
-- Case5: with schedule is "delete"
-	/**
-	 * Check output when create trigger with schedule is "delete".
-	 *
-	 * Expected: 
-	 *		jobfacade: unschedule of job successfully.
-	 *		trigger: exist schedule for job
-	 */
+	- Case5: with schedule is "delete"
+		/**
+		 * Check output when create trigger with schedule is "delete".
+		 *
+		 * Expected: 
+		 *		jobfacade: unschedule of job successfully.
+		 *		trigger: exist schedule for job
+		 */
 
 ***Unit test processInstances()
 	Process instances file and create schedue for instances job.
@@ -301,104 +301,164 @@
   	 * lstTriggerWaitAll: list trigger waiting because job waiting for job class
   	 *				lstTriggerWaitAll = [ ["trigger":<trigger_deftail>, "jobName":<jobName>, "jobClass":<jobClassName>], ... ]
 
-- Case1: with instances wait job
-	/**
-	 * Check output when /var/job only contains instances file.
-	 *
-	 * Expected: 
-	 * 		removeInstances: remove instance corresponding to instances file
-	 *		mapJobListInstances: add to map instances corresponding to job
-	 *		mapInstancesWaitJob: add to map instances file wait job
-	 *		mapInstFileListInsts: add all instance of job corresponding to instances file
-	 */
+	- Case1: with instances wait job
+		/**
+		 * Check output when /var/job only contains instances file.
+		 * Does not contain any data in the list or map data as: lstJobWaitJobClass, mapInstFileListInsts, ...
+		 *
+		 * Expected: 
+		 * 		removeInstances: nothing data to remove, return true
+		 *		mapJobListInstances: add to map instances corresponding to job
+		 *		mapInstancesWaitJob: add to map instances file wait job
+		 *		mapInstFileListInsts: add all instance of job corresponding to instances file
+		 */
 
-- Case2: with instances and job; not define schedule of Instances
-	/**
-	 * Check output when /var/job only contains instances and job file.
-	 * Instances has not define schedule corresponding. 
-	 * jobclass has not defined.
-	 *
-	 * Expected: 
-	 *		removeInstances: remove instance corresponding to instances file
-	 *		mapJobListInstances: add to map instances corresponding to job
-	 *		mapInstancesWaitJob: can not contains instances wait job
-	 *		mapInstFileListInsts: add all instance of job corresponding to instances file
-	 *		jobfacade: create job with schedule of job
-	 *		jobfacade: create schedule for instances with "default schedule"
-	 * 		lstTriggerWaitJob: can not contains trigger wait instances
-	 *		lstJobWaitJobClass: can not contains job wait jobclass
-	 */
+	- Case2: with instances and job; not define schedule of Instances
+		/**
+		 * Check output when /var/job only contains instances and job file.
+		 * Instances has not defined the schedule corresponding. 
+		 * Trigger file does not exist.
+		 * jobclass has not defined into the jobfile.
+		 * Does not contain any data in the list or map data as: lstJobWaitJobClass, mapInstFileListInsts, ...
+		 *
+		 * Expected: 
+		 *		removeInstances: nothing data to remove, return true
+		 *		mapJobListInstances: add to map instances corresponding to job
+		 *		mapInstancesWaitJob: does not exist instances waiting job
+		 *		mapInstFileListInsts: add all instance of job corresponding to instances file
+		 *		jobfacade: can not create schedule of job because the trigger file not exists
+		 *		jobfacade: create schedule for instances with "default schedule"
+		 * 		lstTriggerWaitJob: does not exist trigger waiting instances
+		 *		lstJobWaitJobClass: does not exist job waiting jobclass
+		 */
 
-- Case3: with instances and job; define schedule of Instances
-	/**
-	 * Check output when /var/job only contains instances and job file.
-	 * Instances has defined schedule corresponding.
-	 * jobclass has not defined.
-	 *
-	 * Expected: 
-	 *		removeInstances: remove instance corresponding to instances file
-	 *		mapJobListInstances: add to map instances corresponding to job
-	 *		mapInstancesWaitJob: can not contains instances wait job
-	 *		mapInstFileListInsts: add all instance of job corresponding to instances file
-	 *		jobfacade: create job with schedule of job
-	 *		jobfacade: create schedule for instances
-	 * 		lstTriggerWaitJob: can not contains trigger wait instances
-	 *		lstJobWaitJobClass: can not contains job wait jobclass
-	 */
+	- Case3: with instances and job; define schedule of Instances
+		/**
+		 * Check output when /var/job only contains instances and job file.
+		 * Instances file contains 2 instance of job and only instances_1 has defined schedule corresponding.
+		 * jobclass has not defined.
+		 * Does not contain any data in the list or map data as: lstJobWaitJobClass, mapInstFileListInsts, ...
+		 *
+		 * Expected: 
+		 *		removeInstances: nothing data to remove, return true
+		 *		mapJobListInstances: add to map instances corresponding to job
+		 *		mapInstancesWaitJob: does not exist instances waiting job
+		 *		mapInstFileListInsts: add all instance of job corresponding to instances file
+		 *		jobfacade: create job with schedule of job
+		 *		jobfacade: create schedule for instances
+		 * 		lstTriggerWaitJob: does not exist trigger waiting instances
+		 *		lstJobWaitJobClass: does not exist job waiting jobclass
+		 */
 
-- Case4: with instances wait jobclass
-	/**
-	 * Check output when /var/job only contains instances and job file.
-	 * Jobfile has defined jobclass.
-	 * jobclass file does not exist.
-	 * trigger of instances is not null.
-	 *
-	 * Expected: 
-	 *		removeInstances: remove instance corresponding to instances file
-	 *		mapJobListInstances: add to map instances corresponding to job
-	 *		mapInstancesWaitJob: can not contains instances wait job
-	 *		mapInstFileListInsts: add all instance of job corresponding to instances file
-	 *		jobfacade: create job with schedule of job
-	 *		mapJobInCls: add instances corresponding to jobclass
-	 *		lstJobWaitJobClass: add job to list wait jobclass
-	 *		lstTriggerWaitJob: add data of job instances to list trigger wait job
-	 * 		lstTriggerWaitAll: add data of job instances to list trigger wait all
-	 */
+	- Case4: with instances wait jobclass
+		/**
+		 * Check output when /var/job only contains instances and job file.
+		 * Jobfile has defined jobclass.
+		 * jobclass file does not exist.
+		 * trigger of instances is not null.
+		 * Does not contain any data in the list or map data as: lstJobWaitJobClass, mapInstFileListInsts, ...
+		 *
+		 * Expected: 
+		 *		removeInstances: nothing data to remove, return true
+		 *		mapJobListInstances: add to map instances corresponding to job
+		 *		mapInstancesWaitJob: does not exist instances wait job
+		 *		mapInstFileListInsts: add all instance of job corresponding to instances file
+		 *		jobfacade: create job with schedule of job
+		 *		mapJobInCls: add instances corresponding to jobclass
+		 *		lstJobWaitJobClass: add job to list wait jobclass
+		 *		lstTriggerWaitJob: add data of job instances to list trigger wait job
+		 * 		lstTriggerWaitAll: add data of job instances to list trigger wait all
+		 */
 
-- Case5: not define schedule of Instances
-	/**
-	 * Check output when /var/job only contains instances, job, class file.
-	 * Instances has not define schedule corresponding.
-	 * Jobfile has defined jobclass.
-	 *
-	 * Expected: 
-	 *		removeInstances: remove instance corresponding to instances file
-	 *		mapJobListInstances: add to map instances corresponding to job
-	 *		mapInstancesWaitJob: can not contains instances wait job
-	 *		mapInstFileListInsts: add all instance of job corresponding to instances file
-	 *		jobfacade: create job with schedule of job
-	 *		mapJobInCls: add instances corresponding to jobclass
-	 *		jobfacade: create schedule for instances with "default schedule"
-	 * 		lstTriggerWaitJob: can not contains trigger wait instances
-	 */
+	- Case5: not define schedule of Instances
+		/**
+		 * Check output when /var/job only contains instances, job, class file.
+		 * Instances has not define schedule corresponding.
+		 * Jobfile has defined jobclass.
+		 * Does not contain any data in the list or map data as: lstJobWaitJobClass, mapInstFileListInsts, ...
+		 *
+		 * Expected: 
+		 *		removeInstances: nothing data to remove, return true
+		 *		mapJobListInstances: add to map instances corresponding to job
+		 *		mapInstancesWaitJob: does not exist instances waiting job
+		 *		mapInstFileListInsts: add all instance of job corresponding to instances file
+		 *		jobfacade: can not create schedule of job because the trigger file not exists
+		 *		mapJobInCls: add instances corresponding to jobclass
+		 *		jobfacade: create schedule for instances with "default schedule"
+		 * 		lstJobWaitJobClass: does not exist job waiting jobclass
+		 * 		lstTriggerWaitJob: does not exist trigger waiting instances
+		 * 		lstTriggerWaitAll: does not exist trigger waiting all
+		 */
 
-- Case6: define schedule of Instances
-	/**
-	 * Check output when /var/job only contains instances, job, class file.
-	 * Instances has define schedule corresponding.
-	 * Jobfile has defined jobclass.
-	 *
-	 * Expected: 
-	 *		removeInstances: remove instance corresponding to instances file
-	 *		mapJobListInstances: add to map instances corresponding to job
-	 *		mapInstancesWaitJob: can not contains instances wait job
-	 *		mapInstFileListInsts: add all instance of job corresponding to instances file
-	 *		jobfacade: create job with schedule of job
-	 *		mapJobInCls: add instances corresponding to jobclass
-	 *		jobfacade: create schedule for instances corresponding to schedule defined
-	 * 		lstTriggerWaitJob: can not contains trigger wait instances
-	 */
+	- Case6: define schedule of Instances
+		/**
+		 * Check output when /var/job only contains instances, job, class file.
+		 * Instances has define schedule corresponding.
+		 * Jobfile has defined jobclass.
+		 * Does not contain any data in the list or map data as: lstJobWaitJobClass, mapInstFileListInsts, ...
+		 *
+		 * Expected: 
+		 *		removeInstances: nothing data to remove, return true
+		 *		mapJobListInstances: add to map instances corresponding to job
+		 *		mapInstancesWaitJob: does not exist instances waiting job
+		 *		mapInstFileListInsts: add all instance of job corresponding to instances file
+		 *		jobfacade: can not create schedule of job because the trigger file not exists
+		 *		mapJobInCls: add instances corresponding to jobclass
+		 *		jobfacade: create schedule for instances corresponding to schedule defined (only instance_2 has created schedule)
+		 * 		lstJobWaitJobClass: does not exist job waiting jobclass
+		 * 		lstTriggerWaitJob: does not exist trigger waiting instances
+		 * 		lstTriggerWaitAll: does not exist trigger waiting all
+		 */
 
+	- Case7: with job, instances, trigger and update value of instances file
+		/**
+		 * Check output when /var/job only contains instances, job, class file.
+		 * mapJobListInstances contains data of old instances.
+		 * mapInstFileListInsts contains data of old instances.
+		 * mapInstancesWaitJob contains data of old instances.
+		 * Update new value of instances file existed and has define schedule corresponding.
+		 * Jobfile has defined jobclass.
+		 *
+		 * Expected: 
+		 * 		mapJobListInstances: remove data of old instances
+		 *		mapInstFileListInsts: remove data of old instances
+		 * 		mapInstancesWaitJob: remove data of old instances
+		 *		jobfacade: remove jobDetail of old instances 
+		 *		mapJobListInstances: add new data of instances to map instances corresponding to job
+		 *		mapInstancesWaitJob: does not exist instances waiting job
+		 *		mapInstFileListInsts: add new data of all instance of job corresponding to instances file
+		 *		jobfacade: can not create schedule of job because the trigger file not exists
+		 *		mapJobInCls: add new data of instances corresponding to jobclass
+		 *		jobfacade: create schedule for instances corresponding to schedule defined (only instance_2 has created schedule)
+		 * 		lstJobWaitJobClass: does not exist job waiting jobclass
+		 * 		lstTriggerWaitJob: does not exist trigger waiting instances
+		 * 		lstTriggerWaitAll: does not exist trigger waiting all
+		 */
+
+	- Case8: with job, class, instances, trigger and update value of instances file
+		/**
+		 * Check output when /var/job only contains instances, job, class file.
+		 * mapJobListInstances contains data of old instances.
+		 * mapInstFileListInsts contains data of old instances.
+		 * mapInstancesWaitJob contains data of old instances.
+		 * Update new value of instances file existed and has define schedule corresponding.
+		 * Jobfile has defined jobclass.
+		 *
+		 * Expected: 
+		 * 		mapJobListInstances: remove data of old instances
+		 *		mapInstFileListInsts: remove data of old instances
+		 * 		mapInstancesWaitJob: remove data of old instances
+		 *		jobfacade: remove jobDetail of old instances 
+		 *		mapJobListInstances: add new data of instances to map instances corresponding to job
+		 *		mapInstancesWaitJob: does not exist instances waiting job
+		 *		mapInstFileListInsts: add new data of all instance of job corresponding to instances file
+		 *		jobfacade: can not create schedule of job because the trigger file not exists
+		 *		mapJobInCls: add new data of instances corresponding to jobclass
+		 *		jobfacade: create schedule for instances corresponding to schedule defined (only instance_2 has created schedule)
+		 * 		lstJobWaitJobClass: does not exist job waiting jobclass
+		 * 		lstTriggerWaitJob: does not exist trigger waiting instances
+		 * 		lstTriggerWaitAll: does not exist trigger waiting all
+		 */
 ***Unit test processTrigger()
 	Process file trg to create and schedule trigger jobs. Create default schedule for instances.
 
@@ -422,89 +482,89 @@
   	 * lstTriggerWaitAll: list trigger waiting because job waiting for job class
   	 *				lstTriggerWaitAll = [ ["trigger":<trigger_deftail>, "jobName":<jobName>, "jobClass":<jobClassName>], ... ]
 
-- Case1: with trigger wait job
-	/**
-	 * Check output when /var/job only contains trigger file.
-	 * Jobfile has not defined jobclass.
-	 *
-	 * Expected: 
-	 * 		removeTrigger: remove trigger corresponding to trigger file
-	 *		mapTrgFileListTrgs: add to map trigger file corresponding to jobname
-	 *		defaultSchedule: get schedule corresponding to jobname 
-	 *		mapJobDefaultSchedule: add to map with schedule corresponding to jobname
-	 *		lstTriggerWaitJob: add to list trigger wait job
-	 */
+	- Case1: with trigger wait job
+		/**
+		 * Check output when /var/job only contains trigger file.
+		 * Jobfile has not defined jobclass.
+		 *
+		 * Expected: 
+		 * 		removeTrigger: remove trigger corresponding to trigger file
+		 *		mapTrgFileListTrgs: add to map trigger file corresponding to jobname
+		 *		defaultSchedule: get schedule corresponding to jobname 
+		 *		mapJobDefaultSchedule: add to map with schedule corresponding to jobname
+		 *		lstTriggerWaitJob: add to list trigger wait job
+		 */
 
-- Case2: with trigger wait jobClass
-	/**
-	 * Check output when /var/job only contains trigger and job file.
-	 * Jobfile has defined jobclass.
-	 *
-	 * Expected: 
-	 * 		removeTrigger: remove trigger corresponding to trigger file
-	 *		mapTrgFileListTrgs: add to map trigger file corresponding to jobname
-	 *		defaultSchedule: get schedule corresponding to jobname 
-	 *		mapJobDefaultSchedule: add to map with schedule corresponding to jobname
-	 *		lstTriggerWaitAll: add data of job to list trigger wait jobclass
-	 */
+	- Case2: with trigger wait jobClass
+		/**
+		 * Check output when /var/job only contains trigger and job file.
+		 * Jobfile has defined jobclass.
+		 *
+		 * Expected: 
+		 * 		removeTrigger: remove trigger corresponding to trigger file
+		 *		mapTrgFileListTrgs: add to map trigger file corresponding to jobname
+		 *		defaultSchedule: get schedule corresponding to jobname 
+		 *		mapJobDefaultSchedule: add to map with schedule corresponding to jobname
+		 *		lstTriggerWaitAll: add data of job to list trigger wait jobclass
+		 */
 
-- Case3: with trigger wait jobClass
-	/**
-	 * Check output when /var/job only contains trigger and job file.
-	 * Jobfile has defined jobclass.
-	 *
-	 * Expected: 
-	 * 		removeTrigger: remove trigger corresponding to trigger file
-	 *		mapTrgFileListTrgs: add to map trigger file corresponding to jobname
-	 *		defaultSchedule: get schedule corresponding to jobname 
-	 *		mapJobDefaultSchedule: add to map with schedule corresponding to jobname
-	 *		lstTriggerWaitAll: cannot contains trigger wait all
-	 *		jobfacade: create schedule for job
-	 */
+	- Case3: with trigger wait jobClass
+		/**
+		 * Check output when /var/job only contains trigger and job file.
+		 * Jobfile has defined jobclass.
+		 *
+		 * Expected: 
+		 * 		removeTrigger: remove trigger corresponding to trigger file
+		 *		mapTrgFileListTrgs: add to map trigger file corresponding to jobname
+		 *		defaultSchedule: get schedule corresponding to jobname 
+		 *		mapJobDefaultSchedule: add to map with schedule corresponding to jobname
+		 *		lstTriggerWaitAll: cannot contains trigger wait all
+		 *		jobfacade: create schedule for job
+		 */
 
-- Case4: with instances of job has not define schedule
-	/**
-	 * Check output when /var/job only contains trigger, job, instances file.
-	 * Jobfile has not define jobclass.
-	 * Instances file has not define schedule.
-	 *
-	 * Expected: 
-	 * 		removeTrigger: remove trigger corresponding to trigger file
-	 *		mapTrgFileListTrgs: add to map trigger file corresponding to jobname
-	 *		defaultSchedule: get schedule corresponding to jobname 
-	 *		mapJobDefaultSchedule: add to map with schedule corresponding to jobname
-	 *		lstTriggerWaitAll: cannot contains trigger wait all
-	 *		jobfacade: creaete schedule for job, instances successfully
-	 */
+	- Case4: with instances of job has not define schedule
+		/**
+		 * Check output when /var/job only contains trigger, job, instances file.
+		 * Jobfile has not define jobclass.
+		 * Instances file has not define schedule.
+		 *
+		 * Expected: 
+		 * 		removeTrigger: remove trigger corresponding to trigger file
+		 *		mapTrgFileListTrgs: add to map trigger file corresponding to jobname
+		 *		defaultSchedule: get schedule corresponding to jobname 
+		 *		mapJobDefaultSchedule: add to map with schedule corresponding to jobname
+		 *		lstTriggerWaitAll: cannot contains trigger wait all
+		 *		jobfacade: creaete schedule for job, instances successfully
+		 */
 
-- Case5: job has define jobClass, does not exist .cls file
-	/**
-	 * Check output when /var/job only contains trigger, job, instances file.
-	 * Jobfile has define jobclass.
-	 * Does not exist class file corresponding to job.
-	 *
-	 * Expected: 
-	 * 		removeTrigger: remove trigger corresponding to trigger file
-	 *		mapTrgFileListTrgs: add to map trigger file corresponding to jobname
-	 *		defaultSchedule: get schedule corresponding to jobname 
-	 *		mapJobDefaultSchedule: add to map with schedule corresponding to jobname
-	 *		lstTriggerWaitAll: add data of job and instances to list trigger wait jobclass
-	 */
+	- Case5: job has define jobClass, does not exist .cls file
+		/**
+		 * Check output when /var/job only contains trigger, job, instances file.
+		 * Jobfile has define jobclass.
+		 * Does not exist class file corresponding to job.
+		 *
+		 * Expected: 
+		 * 		removeTrigger: remove trigger corresponding to trigger file
+		 *		mapTrgFileListTrgs: add to map trigger file corresponding to jobname
+		 *		defaultSchedule: get schedule corresponding to jobname 
+		 *		mapJobDefaultSchedule: add to map with schedule corresponding to jobname
+		 *		lstTriggerWaitAll: add data of job and instances to list trigger wait jobclass
+		 */
 
-- Case6: job has define jobClass, exist .cls file
-	/**
-	 * Check output when /var/job only contains trigger, job, instances file.
-	 * Jobfile has define jobclass.
-	 * Exist class file corresponding to job.
-	 *
-	 * Expected: 
-	 * 		removeTrigger: remove trigger corresponding to trigger file
-	 *		mapTrgFileListTrgs: add to map trigger file corresponding to jobname
-	 *		defaultSchedule: get schedule corresponding to jobname 
-	 *		mapJobDefaultSchedule: add to map with schedule corresponding to jobname
-	 *		lstTriggerWaitAll: cannot contains trigger wait all
-	 *		jobfacade: creaete schedule for job, instances successfully
-	 */
+	- Case6: job has define jobClass, exist .cls file
+		/**
+		 * Check output when /var/job only contains trigger, job, instances file.
+		 * Jobfile has define jobclass.
+		 * Exist class file corresponding to job.
+		 *
+		 * Expected: 
+		 * 		removeTrigger: remove trigger corresponding to trigger file
+		 *		mapTrgFileListTrgs: add to map trigger file corresponding to jobname
+		 *		defaultSchedule: get schedule corresponding to jobname 
+		 *		mapJobDefaultSchedule: add to map with schedule corresponding to jobname
+		 *		lstTriggerWaitAll: cannot contains trigger wait all
+		 *		jobfacade: creaete schedule for job, instances successfully
+		 */
 
 ***Unit test processCls()
 	Process create jobClass and add defined jobs to class.
@@ -524,23 +584,23 @@
   	 * lstTriggerWaitAll: list trigger waiting because job waiting for job class
   	 *				lstTriggerWaitAll = [ ["trigger":<trigger_deftail>, "jobName":<jobName>, "jobClass":<jobClassName>], ... ]
 
-- Case1: with .cls file and job 
-	/**
-	 * Check output when /var/job only contains job, trigger file.
-	 * Jobfile has defined jobclass.
-	 * Class file has defined concurrency, maxrun, maxwait.
-	 *
-	 * Expected: 
-	 * 		removeJobCls: remove class corresponding to class file
-	 *		mapJCFileListJC: add to map class file name corresponding to class name
-	 * 		jobfacade: create class for job corresponding to class name
-	 *		setConcurrency for jobclass successfully
-	 *		setMaxRunTime for jobclass successfully
-	 *		setMaxWaitTime for jobclass successfully
-	 * 		lstJobWaitJobClass: cannot contains job wait jobclass
-	 *		jobfacade: create schedule for job successfully
-	 * 		lstTriggerWaitAll: cannot contains trigger wait all
-	 */
+	- Case1: with .cls file and job 
+		/**
+		 * Check output when /var/job only contains job, trigger file.
+		 * Jobfile has defined jobclass.
+		 * Class file has defined concurrency, maxrun, maxwait.
+		 *
+		 * Expected: 
+		 * 		removeJobCls: remove class corresponding to class file
+		 *		mapJCFileListJC: add to map class file name corresponding to class name
+		 * 		jobfacade: create class for job corresponding to class name
+		 *		setConcurrency for jobclass successfully
+		 *		setMaxRunTime for jobclass successfully
+		 *		setMaxWaitTime for jobclass successfully
+		 * 		lstJobWaitJobClass: cannot contains job wait jobclass
+		 *		jobfacade: create schedule for job successfully
+		 * 		lstTriggerWaitAll: cannot contains trigger wait all
+		 */
 
 ***Unit test processJob()
 	Process job
@@ -564,44 +624,44 @@
   	 * lstTriggerWaitAll: list trigger waiting because job waiting for job class
   	 *				lstTriggerWaitAll = [ ["trigger":<trigger_deftail>, "jobName":<jobName>, "jobClass":<jobClassName>], ... ]
 
-- Case1: with job, trigger
-	/**
-	 * Check output when /var/job only contains job, trigger file.
-	 * Jobfile has not defined jobclass.
-	 *
-	 * Expected: 
-	 *		removeJob: remove detail of job corresponding to job file
-	 *		jobfacade: create schedule for job
-	 *		mapJobJobFile: add to map jobname corresponding to jobfile
-	 *		lstTriggerWaitJob: does not contains trigger wait job
-	 *		lstTriggerWaitAll: does not contains trigger wait all
-	 *		lstJobWaitJobClass: does not contains job wait jobclass
-	 */
+	- Case1: with job, trigger
+		/**
+		 * Check output when /var/job only contains job, trigger file.
+		 * Jobfile has not defined jobclass.
+		 *
+		 * Expected: 
+		 *		removeJob: remove detail of job corresponding to job file
+		 *		jobfacade: create schedule for job
+		 *		mapJobJobFile: add to map jobname corresponding to jobfile
+		 *		lstTriggerWaitJob: does not contains trigger wait job
+		 *		lstTriggerWaitAll: does not contains trigger wait all
+		 *		lstJobWaitJobClass: does not contains job wait jobclass
+		 */
 
-- Case2: with job, class, trigger
-	/**
-	 * Check output when /var/job only contains job, class and trigger file.
-	 * Jobfile has defined jobclass.
-	 *
-	 * Expected: 
-	 *		removeJob: remove detail of job corresponding to job file
-	 *		jobfacade: create schedule for job
-	 *		mapJobJobFile: add to map jobname corresponding to jobfile
-	 *		mapJobInCls: add jobname corresponding to jobclass 
-	 *		lstTriggerWaitJob: does not contains trigger wait job
-	 */
+	- Case2: with job, class, trigger
+		/**
+		 * Check output when /var/job only contains job, class and trigger file.
+		 * Jobfile has defined jobclass.
+		 *
+		 * Expected: 
+		 *		removeJob: remove detail of job corresponding to job file
+		 *		jobfacade: create schedule for job
+		 *		mapJobJobFile: add to map jobname corresponding to jobfile
+		 *		mapJobInCls: add jobname corresponding to jobclass 
+		 *		lstTriggerWaitJob: does not contains trigger wait job
+		 */
 
-- Case3: job has define jobClass, does not exist .cls file
-	/**
-	 * Check output when /var/job only contains job and trigger file.
-	 * Jobfile has defined jobclass.
-	 * Does not exist .cls file.
-	 *
-	 * Expected: 
-	 *		removeJob: remove detail of job corresponding to job file
-	 *		jobfacade: create schedule for job
-	 *		mapJobJobFile: add to map jobname corresponding to jobfile
-	 *		mapJobInCls: add jobname corresponding to jobclass 
-	 *		lstJobWaitJobClass: add data of job to list job wait jobclass
-	 *		lstTriggerWaitAll: add data of trigger to list trigger wait jobclass
-	 */
+	- Case3: job has define jobClass, does not exist .cls file
+		/**
+		 * Check output when /var/job only contains job and trigger file.
+		 * Jobfile has defined jobclass.
+		 * Does not exist .cls file.
+		 *
+		 * Expected: 
+		 *		removeJob: remove detail of job corresponding to job file
+		 *		jobfacade: create schedule for job
+		 *		mapJobJobFile: add to map jobname corresponding to jobfile
+		 *		mapJobInCls: add jobname corresponding to jobclass 
+		 *		lstJobWaitJobClass: add data of job to list job wait jobclass
+		 *		lstTriggerWaitAll: add data of trigger to list trigger wait jobclass
+		 */
