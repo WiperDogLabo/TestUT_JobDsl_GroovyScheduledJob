@@ -1,0 +1,10 @@
+[
+	"inst1": [
+		"schedule":"10i",
+		"params":["hostid":"params_inst01"]
+	],
+	"inst2": [
+		"schedule":"5i",
+		"params":["hostid":"params_inst02"]
+	]
+]

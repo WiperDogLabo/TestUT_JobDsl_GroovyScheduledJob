@@ -1,0 +1,7 @@
+JOB = [name:"testJob_04", jobclass:"class_A"]
+FETCHACTION = {
+    def resultData = ["test message"]
+    return resultData
+}
+MONITORINGTYPE = "Others"
+DEST = parameters.dest

@@ -486,9 +486,10 @@
 		/**
 		 * Check output when /var/job only contains trigger file.
 		 * Jobfile has not defined jobclass.
+		 * Does not contain any data in the list or map data as: lstJobWaitJobClass, mapTrgFileListTrgs, ...
 		 *
 		 * Expected: 
-		 * 		removeTrigger: remove trigger corresponding to trigger file
+		 * 		removeTrigger: nothing data to remove, return true
 		 *		mapTrgFileListTrgs: add to map trigger file corresponding to jobname
 		 *		defaultSchedule: get schedule corresponding to jobname 
 		 *		mapJobDefaultSchedule: add to map with schedule corresponding to jobname
@@ -499,9 +500,10 @@
 		/**
 		 * Check output when /var/job only contains trigger and job file.
 		 * Jobfile has defined jobclass.
+		 * Does not contain any data in the list or map data as: lstJobWaitJobClass, mapTrgFileListTrgs, ...
 		 *
 		 * Expected: 
-		 * 		removeTrigger: remove trigger corresponding to trigger file
+		 * 		removeTrigger: nothing data to remove, return true
 		 *		mapTrgFileListTrgs: add to map trigger file corresponding to jobname
 		 *		defaultSchedule: get schedule corresponding to jobname 
 		 *		mapJobDefaultSchedule: add to map with schedule corresponding to jobname
@@ -512,9 +514,10 @@
 		/**
 		 * Check output when /var/job only contains trigger and job file.
 		 * Jobfile has defined jobclass.
+		 * Does not contain any data in the list or map data as: lstJobWaitJobClass, mapTrgFileListTrgs, ...
 		 *
 		 * Expected: 
-		 * 		removeTrigger: remove trigger corresponding to trigger file
+		 * 		removeTrigger: nothing data to remove, return true
 		 *		mapTrgFileListTrgs: add to map trigger file corresponding to jobname
 		 *		defaultSchedule: get schedule corresponding to jobname 
 		 *		mapJobDefaultSchedule: add to map with schedule corresponding to jobname
@@ -527,9 +530,10 @@
 		 * Check output when /var/job only contains trigger, job, instances file.
 		 * Jobfile has not define jobclass.
 		 * Instances file has not define schedule.
+		 * Does not contain any data in the list or map data as: lstJobWaitJobClass, mapTrgFileListTrgs, ...
 		 *
 		 * Expected: 
-		 * 		removeTrigger: remove trigger corresponding to trigger file
+		 * 		removeTrigger: nothing data to remove, return true
 		 *		mapTrgFileListTrgs: add to map trigger file corresponding to jobname
 		 *		defaultSchedule: get schedule corresponding to jobname 
 		 *		mapJobDefaultSchedule: add to map with schedule corresponding to jobname
@@ -542,9 +546,10 @@
 		 * Check output when /var/job only contains trigger, job, instances file.
 		 * Jobfile has define jobclass.
 		 * Does not exist class file corresponding to job.
+		 * Does not contain any data in the list or map data as: lstJobWaitJobClass, mapTrgFileListTrgs, ...
 		 *
 		 * Expected: 
-		 * 		removeTrigger: remove trigger corresponding to trigger file
+		 * 		removeTrigger: nothing data to remove, return true
 		 *		mapTrgFileListTrgs: add to map trigger file corresponding to jobname
 		 *		defaultSchedule: get schedule corresponding to jobname 
 		 *		mapJobDefaultSchedule: add to map with schedule corresponding to jobname
@@ -556,9 +561,10 @@
 		 * Check output when /var/job only contains trigger, job, instances file.
 		 * Jobfile has define jobclass.
 		 * Exist class file corresponding to job.
+		 * Does not contain any data in the list or map data as: lstJobWaitJobClass, mapTrgFileListTrgs, ...
 		 *
 		 * Expected: 
-		 * 		removeTrigger: remove trigger corresponding to trigger file
+		 * 		removeTrigger: nothing data to remove, return true
 		 *		mapTrgFileListTrgs: add to map trigger file corresponding to jobname
 		 *		defaultSchedule: get schedule corresponding to jobname 
 		 *		mapJobDefaultSchedule: add to map with schedule corresponding to jobname
