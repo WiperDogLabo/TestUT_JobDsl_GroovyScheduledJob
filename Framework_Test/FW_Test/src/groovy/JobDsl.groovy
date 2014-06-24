@@ -9,15 +9,16 @@ import org.quartz.TriggerBuilder;
 import org.quartz.TriggerKey;
 import org.quartz.TriggerListener;
 import org.apache.log4j.Logger;
+import org.osgi.framework.BundleContext
 
 class JobDsl implements JobDSLService {
 	def shell
 	def jobfacade
-	def loader	
+	def loader
 	def lstTriggerWaitJob = []  //list trigger waiting for reading job
 	def lstJobWaitJobClass = [] // list job waiting for reading job class
 	def lstTriggerWaitAll = []  // list trigger waiting because job waiting for job class
-	
+	def bundleContext
 	def mapInstancesWaitJob = [:] // map [jobName:<list instances>] instances waiting for reading job
 	def mapJobDefaultSchedule = [:] // map [jobName:<schedule in trigger file>] schedule can be used for jobInstances
 	// Define a map to store <jobName:listInstances >
@@ -25,7 +26,12 @@ class JobDsl implements JobDSLService {
 	// Define a map to store <jobName: listJob>
 	def mapJobJobFile = [:] // map [jobName: <jobfile>], jobfile: directory of job file
 	def defaultSchedule // Store schedule in trigger file. It can be used in processInstances
-	
+	//Store list schedule corresponding to trigger file
+	def mapTrgFileListTrgs = [:]
+	//Store list instance corresponding to instances file
+	def mapInstFileListInsts = [:]
+	def mapJCFileListJC = [:]
+	def mapJobInCls = [:]
 	def logger = Logger.getLogger("org.wiperdog.scriptsupport.groovyrunner")
 	DefaultSender sender = new DefaultSender()
 	
@@ -49,9 +55,11 @@ class JobDsl implements JobDSLService {
 		this.shell = shell
 		this.jobfacade = jobfacade
 		this.loader = shell.getClassLoader()
+		this.bundleContext = context
 	}
 
 	public boolean processJob(File jobfile) {
+		removeJob(jobfile)
 		try {
 			loader.clearCache()
 			def clsJob = loader.parseClass(jobfile)
@@ -75,6 +83,10 @@ class JobDsl implements JobDSLService {
 			
 			// Check if job belongs to a jobClass or not 
 			if (jobClassName != null && jobClassName != "") {
+				if(mapJobInCls[jobClassName] == null ){
+					mapJobInCls[jobClassName] = []
+				}
+				mapJobInCls[jobClassName].add(jobName)
 				def jc = getJobClass(jobClassName)
 				if (jc == null) {
 					//if job waiting jobclass then add to list lstJobWaitJobClass
@@ -82,7 +94,6 @@ class JobDsl implements JobDSLService {
 					jobWaitClass["jobClass"] = jobClassName
 					jobWaitClass["jobName"] = jobName
 					lstJobWaitJobClass.add(jobWaitClass)
-
 					//if job waiting for reading jobclass, add trigger, job, jobclass to list lstTriggerWaitAll
 					lstTriggerWaitJob.each {
 						if (it["jobName"] == jobName) {
@@ -150,6 +161,9 @@ class JobDsl implements JobDSLService {
 	 * @return true
 	 */
 	public boolean processCls(File clsfile) {
+		removeJobCls(clsfile)
+		def clsFileName = clsfile.getName()
+		mapJCFileListJC[clsFileName] = []
 		try{
 			clsfile.eachLine { aline -> 
 				def clsdef = shell.evaluate( "[" + aline + "]")	
@@ -158,6 +172,7 @@ class JobDsl implements JobDSLService {
 				def maxrun = clsdef[ResourceConstants.DEF_CLS_MAXRUN]
 				def maxwait = clsdef[ResourceConstants.DEF_CLS_MAXWAIT]
 				if (clsname != null && clsname != "") {
+					mapJCFileListJC[clsFileName].add(clsname)
 					def jobcls = getJobClass(clsname)
 					def lstRemoveJobClass = []
 					def lstRemoveTrigger = []
@@ -213,11 +228,15 @@ class JobDsl implements JobDSLService {
 	 * @return true
 	 */
 	public boolean processTrigger(File trgfile) {
+		removeTrigger(trgfile)
+		def trgFileName = trgfile.getName()
+		mapTrgFileListTrgs[trgFileName] = []
 		try {
 			trgfile.eachLine { aline -> 
 				def trg = shell.evaluate( "[" + aline + "]")	
 				if (trg != null) {
 					def jobname = trg[ResourceConstants.DEF_TRIGGER_JOB]
+					mapTrgFileListTrgs[trgFileName].add(jobname)
 					defaultSchedule = trg[ResourceConstants.DEF_TRIGGER_SCHEDULE]
 						mapJobDefaultSchedule[jobname] = defaultSchedule
 						try {
@@ -315,6 +334,9 @@ class JobDsl implements JobDSLService {
 	 * @return true 
 	 */
 	public boolean processInstances(File instfile) {
+		removeInstances(instfile)
+		def instfilename = instfile.getName()
+		mapInstFileListInsts[instfilename] = []
 		try {
 			loader.clearCache()
 			def listInstances = []
@@ -360,6 +382,7 @@ class JobDsl implements JobDSLService {
 				def isNotSchedule = true
 				def job_inst = jobName + "_" + element_listinst.instancesName
 				def tmpTextParesd = textParsed.trim()
+				mapInstFileListInsts[instfilename].add(job_inst)
 				// tmpTextParesd != null means .job file is loaded
 				if(tmpTextParesd != null) {
 					// Parse class and create job instances
@@ -370,6 +393,7 @@ class JobDsl implements JobDSLService {
 					def scheduledJob = new GroovyScheduledJob(jobfile.absolutePath, clsJob, element_listinst.params, jobName, element_listinst.instancesName, sender)
 					try {
 						jobfacade.createJob(scheduledJob)
+
 					} catch (Exception e) {
 						println "Error createJob: " + e
 					}
@@ -377,7 +401,11 @@ class JobDsl implements JobDSLService {
 					// Check if job instances is belongs to a jobClass or not
 					def className = scheduledJob.getJobClassName()
 					if(className != null && className != "") {
-						def jc = getJobClass(className)
+						if(mapJobInCls[className] == null) {
+							mapJobInCls[className] = []
+						}
+						mapJobInCls[className].add(job_inst)
+						def jc = getJobClass(className)							
 						// jobClass has not been loaded yet
 						if(jc == null) {
 							//if job waiting jobclass then add to list lstJobWaitJobClass
@@ -562,5 +590,233 @@ class JobDsl implements JobDSLService {
 		}
 		return trigger
 	}
-}
 
+	/**
+	 * Process remove data from scheduler when delete job file.
+	 * Return true to stop notify file .job
+	 * @param jobFile Job file
+	 * @return true
+	 */
+	public boolean removeJob(File jobFile) {
+		def jobNameRemove
+		mapJobJobFile.each{ key,value->
+			if(value.equals(jobFile)) {
+				def jobDetail = jobfacade.getJob(key)
+				//Add trigger to lstTriggerWaitJob
+				if(jobfacade.getTrigger(key) != null ) {
+					def mapTriggerWaitJob = [:]
+					mapTriggerWaitJob["trigger"] = jobfacade.getTrigger(key)
+					mapTriggerWaitJob["jobName"] = key
+					lstTriggerWaitJob.add(mapTriggerWaitJob)
+				}
+				// Add instance file (if available to mapInstWaitJob)
+				MonitorJobConfigLoader configLoader = new MonitorJobConfigLoader(this.bundleContext)
+				def properties = configLoader.getProperties()
+				def inst_dir = new File(properties.get(ResourceConstants.JOBINST_DIRECTORY))
+				def instFile = inst_dir.listFiles()
+				instFile.each{
+					if(it.getName().endsWith(".instances") && it.getName().equals( key + ".instances")) {
+						mapInstancesWaitJob[key] = it
+						mapInstFileListInsts[it.getName()].each{ inst_name->
+						//Unschedule instance of job and add trigger to lstTriggerWaitJob
+						def trigger = jobfacade.getTrigger(inst_name)
+						if(trigger != null ) {
+							def mapTriggerWaitJob = [:]
+							mapTriggerWaitJob["trigger"] = trigger
+							mapTriggerWaitJob["jobName"] = inst_name
+							lstTriggerWaitJob.add(mapTriggerWaitJob)
+							jobfacade.unscheduleJob(trigger)
+						}
+					}
+				}
+
+				}
+				Iterator it = lstJobWaitJobClass.iterator()
+				while(it.hasNext()){
+					def jobWaitClass = it.next()
+					if(jobWaitClass["jobName"].equals(key)){
+						it.remove()
+					}
+				}
+				if(jobDetail != null) {
+					jobfacade.removeJob(jobDetail)
+					jobNameRemove = key
+				}
+			}
+
+		}
+		if(jobNameRemove != null) {
+			mapJobJobFile.remove(jobNameRemove)
+		}
+
+		Iterator iter = lstJobWaitJobClass.iterator()
+		while(iter.hasNext()) {
+			def object = iter.next()
+			if(object["jobName"].equals(jobNameRemove)){
+				 iter.remove()
+			 }
+		}
+
+		//Remove from mapJobDefaultSchedule
+		def keys = mapJobDefaultSchedule.keySet();
+		def removeKey = null
+		keys.each { key->
+			if(key.equals(jobNameRemove)){
+		  		removeKey = key
+			}
+		}	
+		mapJobDefaultSchedule.remove(removeKey)
+
+		//Remove from mapJobListInstances
+		keys = mapJobListInstances.keySet();
+		keys.each { key->
+			if(key.equals(jobNameRemove)){
+		  		removeKey = key
+			}
+		}	
+		mapJobListInstances.remove(removeKey)
+
+		return true
+	}
+
+	/**
+	 * Process remove data from scheduler when delete instances file.
+	 * Return true to stop notify file .instances
+	 * @param instfile Instances file
+	 * @return true
+	 */
+	public boolean removeInstances(File instfile) {
+		def instfilename = instfile.getName()
+		//Loop each instance declare in instfile
+		mapInstFileListInsts[instfilename].each{instName ->
+			def jobDetail = jobfacade.getJob(instName)
+			if(jobDetail != null){
+				//Remove job from scheduler
+				jobfacade.removeJob(jobDetail)
+			}
+		}
+
+
+		//Remove from mapInstancesWaitJob
+		def keys = mapInstancesWaitJob.keySet();
+		def removeKey = null
+		keys.each { key->
+			if(mapInstancesWaitJob[key].equals(instfile)){
+		  		removeKey = key
+			}
+		}	
+		mapInstancesWaitJob.remove(removeKey)
+
+
+		//Remove from mapJobListInstances
+		def jobName = instfilename.substring(0,instfilename.lastIndexOf(".instances"))
+		keys = mapJobListInstances.keySet();
+		keys.each { key->
+			if(key.equals(jobName)){
+		  		removeKey = key
+			}
+		}	
+		mapJobListInstances.remove(removeKey)
+
+		//Remove from mapInstFileListInsts
+		mapInstFileListInsts.remove(instfilename)
+		return true
+	}
+
+	/**
+	 * Process remove data from scheduler when delete trigger file.
+	 * Return true to stop notify file .trg
+	 * @param trgFile Trigger file
+	 * @return true
+	 */
+	public boolean removeTrigger(File trgFile) {
+		Iterator iter = mapTrgFileListTrgs.keySet().iterator();
+		//Loop through trigger in trgFile
+		while(iter.hasNext()) {
+			String trgFileName = iter.next();
+			if(trgFile.getName().equals(trgFileName)) {
+				mapTrgFileListTrgs[trgFileName].each{ jobname ->
+
+					    //Remove trigger from lists wait
+					   Iterator iter2 = lstTriggerWaitAll.iterator()
+						while(iter2.hasNext()){
+							def trgWaitAll = iter2.next()
+							if(trgWaitAll["jobName"].equals(jobname)) {
+								iter2.remove()
+							}
+						}
+						iter2 = lstTriggerWaitJob.iterator()
+						while(iter2.hasNext()){
+							def trgWaitJob = iter2.next()
+							if(trgWaitJob["jobName"].equals(jobname)) {
+								iter2.remove()
+							}
+						}
+					//Unscheduled job with trigger
+					def trigger = jobfacade.getTrigger(jobname)
+					if(trigger != null ) {
+						jobfacade.unscheduleJob(trigger)
+					}
+				}
+			}
+		}
+		//Remove from mapTrgFileListTrgs
+		mapTrgFileListTrgs.remove(trgFile.getName())
+		return true
+	}
+
+	/**
+	 * Process remove data from scheduler when delete jobclass file.
+	 * Return true to stop notify file .cls
+	 * @param jobcls job class file
+	 * @return true
+	 */
+	public boolean removeJobCls(File jobcls) {
+
+		Iterator iter = mapJCFileListJC.keySet().iterator();
+		//Loop each class in class file
+		while(iter.hasNext()) {
+			String clsFileName = iter.next();
+			if(jobcls.getName().equals(clsFileName)) {
+				mapJCFileListJC[clsFileName].each{ clsName ->
+					//Unschedule job in class before remove class
+					mapJobInCls[clsName].each{ jobName ->
+						//Unscheduled job with trigger
+						def trigger = jobfacade.getTrigger(jobName)
+						if(trigger != null ) {
+							//Add trigger of job belong to job class to lists wait
+							def triggerWaitAll = [:]
+							triggerWaitAll["trigger"] = trigger
+							triggerWaitAll["jobName"] = jobName
+							triggerWaitAll["jobClass"] = clsName
+							lstTriggerWaitAll.add(triggerWaitAll)
+							def mapTriggerWaitJob = [:]
+							mapTriggerWaitJob["trigger"] = trigger
+							mapTriggerWaitJob["jobName"] = jobName
+							lstTriggerWaitJob.add(mapTriggerWaitJob)
+							//Unschedule job by trigger
+							jobfacade.unscheduleJob(trigger)
+						}
+						//Add jobs of belong to 'clsName' to list lstJobWaitJobClass
+						def jobWaitClass = [:]
+						jobWaitClass["jobClass"] = clsName
+						jobWaitClass["jobName"] = jobName
+						lstJobWaitJobClass.add(jobWaitClass)
+
+						//Remove jobclass from scheduler
+						if(jobfacade.getJobClass(clsName) != null ) {
+							jobfacade.deleteJobClass(clsName)
+						}
+					}
+					//Remove from mapJobInCls 
+					mapJobInCls.remove(clsFileName)
+				}
+			}
+
+		}
+		//Remove from mapJCFileListJC 
+		mapJCFileListJC.remove(jobcls.getName())
+
+		return true
+	}
+}
