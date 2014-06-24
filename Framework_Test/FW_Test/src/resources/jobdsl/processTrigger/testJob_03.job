@@ -1,0 +1,33 @@
+JOB = [name:"testJob_03", jobclass:"class_A"]
+
+GROUPKEY = ["Name"]
+FETCHACTION = {
+	def resultData = [
+		[
+                        "Name" : "luvina",
+                        "Count" : 10,
+                        "CumCnt" : 100
+                ],
+		[
+                        "Name" : "insight",
+                        "Count" : 20,
+                        "CumCnt" : 120
+                ]
+	]
+	
+	// set PERSISTENTDATA
+	resultData.each {
+		PERSISTENTDATA[it.Name] = it	
+	}
+	
+	// set lastexecution
+	if(lastexecution != null) {
+		lastexecution += 10
+	} else {
+		lastexecution = 10000
+	}
+	return resultData
+}
+
+MONITORINGTYPE = "Others"
+DEST = parameters.dest
