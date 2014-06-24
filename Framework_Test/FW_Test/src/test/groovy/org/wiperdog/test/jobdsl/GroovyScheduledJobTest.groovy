@@ -36,7 +36,8 @@ public class GroovyScheduledJobTest{
 	def binding
 	ClassLoaderUtil clzzLoaderUtl = new ClassLoaderUtil();	
 	
-	public InterruptJobTest() {
+	public InterruptJobTest() {		
+		
 	}		
 	
 	@Inject

@@ -321,7 +321,7 @@ class JobDsl implements JobDSLService {
 			def lstRemoveTrigger = []
 			
 			// Evaluate file .instances
-			def instEval = shell.evaluate(instfile)			
+			def instEval = shell.evaluate(instfile)
 			def jobName = instfile.getName().substring(0, instfile.getName().indexOf(".instances"))
 			/*def jobFileName = jobName + ".job"
 			def jobfile = new File(System.getProperty("felix.home") + "/var/job/" + jobFileName)*/
