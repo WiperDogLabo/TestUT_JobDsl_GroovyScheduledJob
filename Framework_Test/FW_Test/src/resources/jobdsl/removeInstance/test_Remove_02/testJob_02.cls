@@ -1,0 +1,1 @@
+name: "CLASS_A", concurrency: 1, maxrun: 5, maxwait:5
